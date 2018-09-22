@@ -5,21 +5,10 @@ import "truffle/DeployedAddresses.sol";
 import "../contracts/PrisonersDilemma.sol";
 
 contract TestPrisonersDilemma {
+    PrisonersDilemma game = PrisonersDilemma(DeployedAddresses.PrisonersDilemma());
+    
+    function testInitialStateUsingDeployedContract() public {
 
-//  function testInitialBalanceUsingDeployedContract() public {
-//    MetaCoin meta = MetaCoin(DeployedAddresses.MetaCoin());
-//
-//    uint expected = 10000;
-//
-//    Assert.equal(meta.getBalance(tx.origin), expected, "Owner should have 10000 MetaCoin initially");
-//  }
-//
-//  function testInitialBalanceWithNewMetaCoin() public {
-//    MetaCoin meta = new MetaCoin();
-//
-//    uint expected = 10000;
-//
-//    Assert.equal(meta.getBalance(tx.origin), expected, "Owner should have 10000 MetaCoin initially");
-//  }
-//
+        Assert.equal(game.winner, address(0), "Winner address should be empty");
+    }
 }
