@@ -25,9 +25,9 @@ contract PrisonersDilemma {
     enum ActionChoices { NoChoice, Share, Take }
 
     struct Player {
-        address addr = address(0); //empty address
-        ActionChoices choice = ActionChoices.NoChoice;
-        uint score = 0;
+        address addr;
+        ActionChoices choice;
+        uint score;
     }
 
     //State Variables
@@ -40,8 +40,12 @@ contract PrisonersDilemma {
     event AlertWinner(address _player);
 
     constructor(address _player1, address _player2) {
-        players[_player1].addr = _player1;
-        players[_player2].addr = _player2;
+
+        player1 = PLayer(_player1, ActionChoices.NoChoice, 0);
+        player2 = Player(_player2, ActionChoices.NoChoice, 0);
+
+        players[_player1].addr = player1;
+        players[_player2].addr = player2;
         emit ContractInitialized(_player1, _player2);
     }
 
