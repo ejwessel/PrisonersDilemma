@@ -41,8 +41,8 @@ contract PrisonersDilemma {
 
     constructor(address _player1, address _player2) {
 
-        player1 = PLayer(_player1, ActionChoices.NoChoice, 0);
-        player2 = Player(_player2, ActionChoices.NoChoice, 0);
+        Player player1 = Player(_player1, ActionChoices.NoChoice, 0);
+        Player player2 = Player(_player2, ActionChoices.NoChoice, 0);
 
         players[_player1].addr = player1;
         players[_player2].addr = player2;
