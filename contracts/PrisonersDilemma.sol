@@ -1,4 +1,4 @@
-pragma solidity ^0.4.25;
+pragma solidity ^0.4.24;
 
 /**
 This contract mimics that of the prisoners dilemma
@@ -39,13 +39,13 @@ contract PrisonersDilemma {
     event PlayerSelectedChoice(address _player);
     event AlertWinner(address _player);
 
-    constructor(address _player1, address _player2) {
+    constructor(address _player1, address _player2) public {
 
-        Player player1 = Player(_player1, ActionChoices.NoChoice, 0);
-        Player player2 = Player(_player2, ActionChoices.NoChoice, 0);
+        Player memory player1 = Player(_player1, ActionChoices.NoChoice, 0);
+        Player memory player2 = Player(_player2, ActionChoices.NoChoice, 0);
 
-        players[_player1].addr = player1;
-        players[_player2].addr = player2;
+        players[_player1].addr = _player1;
+        players[_player2].addr = _player2;
         emit ContractInitialized(_player1, _player2);
     }
 
