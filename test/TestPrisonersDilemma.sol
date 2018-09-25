@@ -1,4 +1,4 @@
-pragma solidity ^0.4.25;
+pragma solidity ^0.4.24;
 
 import "truffle/Assert.sol";
 import "truffle/DeployedAddresses.sol";
@@ -8,7 +8,6 @@ contract TestPrisonersDilemma {
     PrisonersDilemma game = PrisonersDilemma(DeployedAddresses.PrisonersDilemma());
     
     function testInitialStateUsingDeployedContract() public {
-
-        Assert.equal(game.winner, address(0), "Winner address should be empty");
+        Assert.equal(address(game.winner), address(0), "Winner address should be empty");
     }
 }

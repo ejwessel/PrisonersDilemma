@@ -31,8 +31,8 @@ contract PrisonersDilemma {
     }
 
     //State Variables
-    mapping (address => Player) private players;
-    address private winner = address(0); //empty address
+    mapping (address => Player) public players;
+    address public winner = address(0); //empty address
 
     //Events
     event ContractInitialized(address _player1, address _player2);
@@ -41,6 +41,7 @@ contract PrisonersDilemma {
 
     constructor(address _player1, address _player2) public {
 
+        //should this be memory or storage?
         Player memory player1 = Player(_player1, ActionChoices.NoChoice, 0);
         Player memory player2 = Player(_player2, ActionChoices.NoChoice, 0);
 
