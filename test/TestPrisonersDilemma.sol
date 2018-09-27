@@ -11,4 +11,13 @@ contract TestPrisonersDilemma {
         //After a contract is created with two addresses there should be no winner defined
         Assert.equal(address(game.winner()), address(0), "Winner address should be empty");
     }
+
+    function testPlayerChoose() public {
+        //Test Player exists
+        game.playerChoose(address(1), 1);
+
+        //Test Choice is valid
+
+        //Test Choice is made
+    }
 }
