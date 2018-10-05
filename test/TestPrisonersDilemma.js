@@ -13,12 +13,10 @@ contract('Async PrisonersDilemma', async (accounts) => {
         assert.equal(player[2].toNumber(), 0, "score does not match data saved");
     });
 
-    it("Test a valid Player chooses an action TEST", async() => {
+    it("Test a valid Player chooses action", async() => {
         instance.playerChoose(CHOICES["Share"], { from: accounts[0] });
         var player = await instance.players.call(accounts[0]);
-        assert.equal(player[0], accounts[0], "address does not match data saved");
         assert.equal(player[1].toNumber(), CHOICES["Share"], "choice does not match data saved");
-        assert.equal(player[2].toNumber(), 0, "score does not match data saved");
     });
 
 });
