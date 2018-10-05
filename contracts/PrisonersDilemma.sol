@@ -51,7 +51,7 @@ contract PrisonersDilemma {
 
     //Functions:
     //function for a player to select a choice
-    function playerChoose(ActionChoices choice) public { 
+    function playerChoose(ActionChoices choice) public returns (ActionChoices){ 
 
         //Require player is within the players mapping
         //0 is default value. We aren't going to allow default values
@@ -64,12 +64,21 @@ contract PrisonersDilemma {
         //Otherwise the player has already made a choice
         require(players[msg.sender].choice == ActionChoices.NoChoice, "Player already made a choice");
        
-       //Set Player Choice 
+        //Set Player Choice 
         players[msg.sender].choice = choice;
 
         emit PlayerSelectedChoice(msg.sender);
     }
+
+    function passSOL(ActionChoices choice) public returns (address){ 
+        require(players[msg.sender].addr != 0x627306090abab3a6e1400e9345bc60c78a8bef57, "Player address is equal");
+    }
+
+    function passJS(ActionChoices choice) public returns (address){ 
+        //this won't pass solidity because the message sender is the TestPrisonersDilemma.sol contract!
+        require(players[msg.sender].addr == 0x627306090abab3a6e1400e9345bc60c78a8bef57, "Player address is not in equal");
+    }
     //function to get a player's scores
     //function to get winner
-
 }
+
