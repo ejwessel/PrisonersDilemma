@@ -1,3 +1,5 @@
+var expectThrow = require("./helper.js");
+
 var PrisonersDilemma = artifacts.require("PrisonersDilemma");
 var CHOICES = { "No_Choice": 0, "Share": 1, "Take": 2 };
 var EMPTY_ADDRESS = "0x0000000000000000000000000000000000000000";
@@ -41,12 +43,11 @@ contract('Async PrisonersDilemma', async (accounts) => {
     });
 
     it("Test invalid Player chooses action", async() => {
-        try {
-            await instance.playerChoose(CHOICES["Share"], { from: accounts[2] });
-        } catch (error) {
-            console.log(error);
-            console.log("error was caught");
-        }
+        await expectThrow(instance.playerChoose(CHOICES["Share"], { from: accounts[2] }));
+    });
+
+    it("Test player chooses NoChoice", async() => {
+        await expectThrow(instance.playerChoose(CHOICES["NoChoice"], { from: accounts[0] }));
     });
 
 });
