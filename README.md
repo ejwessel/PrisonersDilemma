@@ -1,3 +1,4 @@
+```
 This contract mimics that of the prisoners dilemma
 
 +----------+----------------------+
@@ -15,3 +16,4 @@ Rules:
 - If either one of the players takes while the other player shares, the person who shared will receive no points
 - Game ends when one of the players gets 20 points
 - Ties are possible
+```
