@@ -1,12 +1,14 @@
 var expectThrow = require("./helper.js");
-
 var PrisonersDilemma = artifacts.require("PrisonersDilemma");
+
 var CHOICES = { "No_Choice": 0, "Share": 1, "Take": 2 };
 var EMPTY_ADDRESS = "0x0000000000000000000000000000000000000000";
 
-contract('Async PrisonersDilemma', async (accounts) => {
+contract('PrisonersDilemma', async (accounts) => {
 
-    var instance = await PrisonersDilemma.deployed();
+    before(async() => {
+        instance = await PrisonersDilemma.deployed();
+    });
 
     it("Test Initial State of contract", async() => {
         //Get Player from mapping
