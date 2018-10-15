@@ -70,14 +70,6 @@ contract PrisonersDilemma {
         emit PlayerSelectedChoice(msg.sender);
     }
 
-    function passSOL(ActionChoices choice) public returns (address){ 
-        require(players[msg.sender].addr != 0x627306090abab3a6e1400e9345bc60c78a8bef57, "Player address is equal");
-    }
-
-    function passJS(ActionChoices choice) public returns (address){ 
-        //this won't pass solidity because the message sender is the TestPrisonersDilemma.sol contract!
-        require(players[msg.sender].addr == 0x627306090abab3a6e1400e9345bc60c78a8bef57, "Player address is not in equal");
-    }
     //function to get a player's scores
     //function to get winner
 }
