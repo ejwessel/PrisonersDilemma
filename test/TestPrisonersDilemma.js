@@ -33,23 +33,23 @@ contract('Async PrisonersDilemma', async (accounts) => {
         assert.equal(playerAddr, EMPTY_ADDRESS, `player address ${ playerAddr } was valid and should not be`);
     });
 
-    it("Test valid Player chooses action", async() => {
+    it("Test playerChoose()", async() => {
         //Player chooses Share
         await instance.playerChoose(CHOICES["Share"], { from: accounts[0] });
         //Get Player from mapping
         var player = await instance.players.call(accounts[0]);
         var playerChoice = player[1].toNumber();
         assert.equal(playerChoice, CHOICES["Share"], `player choice ${ CHOICES["SHARE"] } was not recorded`);
-    });
 
-    it("Test invalid Player chooses action", async() => {
+        //Test invalid Player chooses action
         await expectThrow(instance.playerChoose(CHOICES["Share"], { from: accounts[2] }));
-    });
 
-    it("Test player chooses NoChoice", async() => {
+        //Test player chooses NoChoice
         await expectThrow(instance.playerChoose(CHOICES["NoChoice"], { from: accounts[0] }));
-    });
 
+        //Test player cannot update choice if choice is already made
+        await expectThrow(instance.playerChoose(CHOICES["Take"], { from: accounts[0] }));
+    });
 });
 
 
