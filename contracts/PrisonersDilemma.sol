@@ -57,7 +57,7 @@ contract PrisonersDilemma {
         //0 is default value. We aren't going to allow default values
         require(players[msg.sender].addr != address(0), "Player address is not in contract");
 
-        //Require player has not passed 'NoChoice'
+        //Require player to not pass 'NoChoice'
         require(choice != ActionChoices.NoChoice, "No selection made, player chose No Choice");
 
         //Update player choice iff the existing state is ActionChoices.NoChoice

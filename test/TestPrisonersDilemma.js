@@ -38,12 +38,13 @@ contract('PrisonersDilemma', async (accounts) => {
     it("Test playerChoose()", async() => {
         //Player chooses Share
         await instance.playerChoose(CHOICES["Share"], { from: accounts[0] });
+
         //Get Player from mapping
         var player = await instance.players.call(accounts[0]);
         var playerChoice = player[1].toNumber();
         assert.equal(playerChoice, CHOICES["Share"], `player choice ${ CHOICES["SHARE"] } was not recorded`);
 
-        //Test invalid Player chooses action
+        //Test invalid Player chooses action share
         await expectThrow(instance.playerChoose(CHOICES["Share"], { from: accounts[2] }));
 
         //Test player chooses NoChoice
@@ -51,5 +52,8 @@ contract('PrisonersDilemma', async (accounts) => {
 
         //Test player cannot update choice if choice is already made
         await expectThrow(instance.playerChoose(CHOICES["Take"], { from: accounts[0] }));
+
+        //Test player cannot pass an invalid choice
+        await expectThrow(instance.playerChoose(9, { from: accounts[0] }));
     });
 });
