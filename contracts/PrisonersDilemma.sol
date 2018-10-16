@@ -51,7 +51,26 @@ contract PrisonersDilemma {
 
     //Functions:
     //function for a player to select a choice
+    function playerChoose(ActionChoices choice) public returns (ActionChoices){ 
+
+        //Require player is within the players mapping
+        //0 is default value. We aren't going to allow default values
+        require(players[msg.sender].addr != address(0), "Player address is not in contract");
+
+        //Require player to not pass 'NoChoice'
+        require(choice != ActionChoices.NoChoice, "No selection made, player chose No Choice");
+
+        //Update player choice iff the existing state is ActionChoices.NoChoice
+        //Otherwise the player has already made a choice
+        require(players[msg.sender].choice == ActionChoices.NoChoice, "Player already made a choice");
+       
+        //Set Player Choice 
+        players[msg.sender].choice = choice;
+
+        emit PlayerSelectedChoice(msg.sender);
+    }
+
     //function to get a player's scores
     //function to get winner
-
 }
+
