@@ -56,4 +56,13 @@ contract('PrisonersDilemma', async (accounts) => {
         //Test player cannot pass an invalid choice
         await expectThrow(instance.playerChoose(9, { from: accounts[0] }));
     });
+
+    it("Test getPlayerScore()", async() => {
+        //Test if address passed is not in the contract
+        await expectThrow(instance.getPlayerScore(accounts[2], { from: accounts[0] })); 
+
+        //Test that a player's score can be retrieved        
+        var playerScore = await instance.getPlayerScore(accounts[0], { from: accounts[0] });
+        assert.equal(playerScore, 0, `player score ${ playerScore } does not match a score of 0`);
+    });
 });
