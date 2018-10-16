@@ -79,6 +79,4 @@ contract PrisonersDilemma {
         require(players[playerAddr].addr != address(0), "Player address is not in contract");
         return players[playerAddr].score;
     }
-
-    //function to get winner
 }
