@@ -71,7 +71,7 @@ contract PrisonersDilemma {
     }
 
     //function to get a player's scores
-    function getPlayerScore(address playerAddr) public returns (uint){
+    function getPlayerScore(address playerAddr) public view returns (uint){
 
         //require the player is in the map in order to look them up
         require(players[playerAddr].addr != address(0), "Player address is not in contract");
