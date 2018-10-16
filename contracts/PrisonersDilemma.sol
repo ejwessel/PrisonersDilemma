@@ -80,36 +80,3 @@ contract PrisonersDilemma {
 
     //function to get winner
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
