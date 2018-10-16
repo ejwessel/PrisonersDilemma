@@ -68,6 +68,8 @@ contract PrisonersDilemma {
         players[msg.sender].choice = choice;
 
         emit PlayerSelectedChoice(msg.sender);
+
+        //TOOD: I need to add logic here that compares the selected choice of this user and the other user
     }
 
     //function to get a player's scores
