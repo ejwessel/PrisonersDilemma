@@ -31,8 +31,10 @@ contract PrisonersDilemma {
     }
 
     //State Variables
+    address[] private playerList;
     mapping (address => Player) public players;
     address public winner = address(0); //empty address
+    uint constant private WINNING_SCORE = 20;
 
     //Events
     event ContractInitialized(address _player1, address _player2);
@@ -45,7 +47,9 @@ contract PrisonersDilemma {
         Player memory player2 = Player(_player2, ActionChoices.NoChoice, 0);
 
         players[_player1].addr = _player1;
+        playerList.push(_player1);
         players[_player2].addr = _player2;
+        playerList.push(_player2);
         emit ContractInitialized(_player1, _player2);
     }
 
@@ -63,13 +67,64 @@ contract PrisonersDilemma {
         //Update player choice iff the existing state is ActionChoices.NoChoice
         //Otherwise the player has already made a choice
         require(players[msg.sender].choice == ActionChoices.NoChoice, "Player already made a choice");
-       
+      
+        //TODO: need a condition to prevent players from playing after a winner is found
+
         //Set Player Choice 
         players[msg.sender].choice = choice;
 
         emit PlayerSelectedChoice(msg.sender);
 
-        //TOOD: I need to add logic here that compares the selected choice of this user and the other user
+        handlePlayerChoice();
+    }
+
+    //function to handle after a player chooses
+    function handlePlayerChoice() private {
+        for (uint i = 0; i < playerList.length; i++) {
+            //get opponent address
+            address opponentAddr = playerList[i];
+            //if the opponent is the current player ignore
+            if(opponentAddr == msg.sender) {
+                continue;
+            }
+            //get the opponent
+            Player memory opponent = players[opponentAddr];
+            //check if the opponent has made a choice yet
+            if( opponent.choice == ActionChoices.NoChoice ) {
+                return;
+            }
+            
+            //get the current player
+            Player memory currentPlayer = players[msg.sender];
+            
+            //handle scoring logic
+            if(opponent.choice == ActionChoices.Take && currentPlayer.choice == ActionChoices.Take) {
+                return;
+            } else if (opponent.choice == ActionChoices.Share && currentPlayer.choice == ActionChoices.Take) {
+                currentPlayer.score += 5;
+            } else if (opponent.choice == ActionChoices.Take && currentPlayer.choice == ActionChoices.Share) {
+                opponent.score += 5;
+            } else {
+                currentPlayer.score += 1;
+                opponent.score += 1;
+            }
+
+            //after scoring check if there is a winner and set winner
+            if(currentPlayer.score >= WINNING_SCORE || opponent.score >= WINNING_SCORE){
+                if(currentPlayer.score >= WINNING_SCORE && opponent.score == WINNING_SCORE){
+                    //no winner
+                    return;
+                } else if (currentPlayer.score >= WINNING_SCORE) {
+                    //current player winner
+                    winner = currentPlayer.addr;
+                } else {
+                    //opponent winner
+                    winner = opponent.addr;
+                }
+                emit AlertWinner(winner);
+            }
+            //implicit else do nothing if nobody has won
+        }
     }
 
     //function to get a player's scores
