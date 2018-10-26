@@ -6,7 +6,7 @@ var EMPTY_ADDRESS = "0x0000000000000000000000000000000000000000";
 
 contract('PrisonersDilemma', async (accounts) => {
 
-    before(async() => {
+    beforeEach(async() => {
         instance = await PrisonersDilemma.deployed();
     });
 
@@ -47,14 +47,14 @@ contract('PrisonersDilemma', async (accounts) => {
         //Test invalid Player chooses action share
         await expectThrow(instance.playerChoose(CHOICES["Share"], { from: accounts[2] }));
 
+        //Test player cannot pass an invalid choice
+        await expectThrow(instance.playerChoose(9, { from: accounts[0] }));
+
         //Test player chooses NoChoice
         await expectThrow(instance.playerChoose(CHOICES["NoChoice"], { from: accounts[0] }));
 
         //Test player cannot update choice if choice is already made
         await expectThrow(instance.playerChoose(CHOICES["Take"], { from: accounts[0] }));
-
-        //Test player cannot pass an invalid choice
-        await expectThrow(instance.playerChoose(9, { from: accounts[0] }));
     });
 
     it("Test getPlayerScore()", async() => {
@@ -65,4 +65,11 @@ contract('PrisonersDilemma', async (accounts) => {
         var playerScore = await instance.getPlayerScore(accounts[0], { from: accounts[0] });
         assert.equal(playerScore, 0, `player score ${ playerScore } does not match a score of 0`);
     });
+
+   it("Test scoring", async() => {
+        //Test opponent player makes a choice
+        await instance.playerChoose(CHOICES["Share"], { from: accounts[1] });
+        player = await instance.players.call(accounts[2]);
+        console.log(player[2].toNumber());
+   });
 });
