@@ -58,14 +58,14 @@ contract PrisonersDilemma {
         players[msg.sender].choice = choice;
         emit PlayerSelectedChoice(msg.sender);
 
-        //tallyPlayerScores();
+        tallyPlayerScores();
         //checkForWinner();
     }
 
     function tallyPlayerScores() private {
         //get players
-        Player memory player1 = players[playerList[0]];
-        Player memory player2 = players[playerList[1]];
+        Player storage player1 = players[playerList[0]];
+        Player storage player2 = players[playerList[1]];
 
         //check either player hasn't made a choice and exit
         if ((player1.choice == ActionChoices.NoChoice) || (player2.choice == ActionChoices.NoChoice)) {

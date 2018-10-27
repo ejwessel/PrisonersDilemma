@@ -8,7 +8,7 @@ contract('PrisonersDilemma', async (accounts) => {
 
     beforeEach(async() => {
         //instance = await PrisonersDilemma.deployed();
-        instance = await PrisonersDilemma.new(accounts[0], accounts[1], { from: accounts[2] });
+        instance = await PrisonersDilemma.new(accounts[0], accounts[1]);
     });
 
     it("Test Initial State of contract", async() => {
@@ -68,16 +68,28 @@ contract('PrisonersDilemma', async (accounts) => {
     });
     
     it("Test scoring", async() => {
-        var player = await instance.players.call(accounts[0]);
+        //Round 1
         await instance.playerChoose(CHOICES["Share"], { from: accounts[0] });
         await instance.playerChoose(CHOICES["Share"], { from: accounts[1] });
         var player1 = await instance.players.call(accounts[0]);
         var player2 = await instance.players.call(accounts[1]);
     
-        console.log(player1[1].toNumber());
-        console.log(player2[1].toNumber());
+        console.log("Choice: " + player1[1].toNumber());
+        console.log("Choice: "  + player2[1].toNumber());
 
-        console.log(player1[2].toNumber());
-        console.log(player2[2].toNumber());
+        console.log("Player 1 Score: " + player1[2].toNumber());
+        console.log("PLayer 2 Score: " + player2[2].toNumber());
+
+        //Round 2
+        await instance.playerChoose(CHOICES["Share"], { from: accounts[0] });
+        await instance.playerChoose(CHOICES["Take"], { from: accounts[1] });
+        var player1 = await instance.players.call(accounts[0]);
+        var player2 = await instance.players.call(accounts[1]);
+    
+        console.log("Choice: " + player1[1].toNumber());
+        console.log("Choice: "  + player2[1].toNumber());
+
+        console.log("Player 1 Score: " + player1[2].toNumber());
+        console.log("PLayer 2 Score: " + player2[2].toNumber());
     });
 });
