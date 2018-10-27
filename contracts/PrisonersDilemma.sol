@@ -22,17 +22,17 @@ contract PrisonersDilemma {
     //Events
     event ContractInitialized(address _player1, address _player2);
     event PlayerSelectedChoice(address _player);
+    event PlayersScoresTallied();
     event AlertWinner(address _player);
 
     constructor(address _player1, address _player2) public {
 
-        Player memory player1 = Player(_player1, ActionChoices.NoChoice, 0);
-        Player memory player2 = Player(_player2, ActionChoices.NoChoice, 0);
-
-        players[_player1].addr = _player1;
+        players[_player1] = Player(_player1, ActionChoices.NoChoice, 0);
         playerList.push(_player1);
-        players[_player2].addr = _player2;
+        
+        players[_player2] = Player(_player2, ActionChoices.NoChoice, 0);
         playerList.push(_player2);
+
         emit ContractInitialized(_player1, _player2);
     }
 
@@ -88,6 +88,8 @@ contract PrisonersDilemma {
         //reset player choices for next round
         player1.choice = ActionChoices.NoChoice;
         player2.choice = ActionChoices.NoChoice;
+
+        emit PlayersScoresTallied();
     }
 
     function checkForWinner() private {

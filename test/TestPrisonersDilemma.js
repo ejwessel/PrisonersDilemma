@@ -73,12 +73,14 @@ contract('PrisonersDilemma', async (accounts) => {
         await instance.playerChoose(CHOICES["Share"], { from: accounts[1] });
         var player1 = await instance.players.call(accounts[0]);
         var player2 = await instance.players.call(accounts[1]);
-    
-        console.log("Choice: " + player1[1].toNumber());
-        console.log("Choice: "  + player2[1].toNumber());
 
-        console.log("Player 1 Score: " + player1[2].toNumber());
-        console.log("PLayer 2 Score: " + player2[2].toNumber());
+        //both player choices should be reset
+        assert.equal(player1[1].toNumber(), 0, "PLayer 1 choice was not reset");
+        assert.equal(player2[1].toNumber(), 0, "PLayer 2 choice was not reset");
+
+        //both players should have 1 point
+        assert.equal(player1[2].toNumber(), 1, "Player 1 points don't match expected");
+        assert.equal(player2[2].toNumber(), 1, "Player 2 points don't match expected");
 
         //Round 2
         await instance.playerChoose(CHOICES["Share"], { from: accounts[0] });
@@ -86,10 +88,55 @@ contract('PrisonersDilemma', async (accounts) => {
         var player1 = await instance.players.call(accounts[0]);
         var player2 = await instance.players.call(accounts[1]);
     
-        console.log("Choice: " + player1[1].toNumber());
-        console.log("Choice: "  + player2[1].toNumber());
+        //both player choices should be reset
+        assert.equal(player1[1].toNumber(), 0, "PLayer 1 choice was not reset");
+        assert.equal(player2[1].toNumber(), 0, "PLayer 2 choice was not reset");
 
-        console.log("Player 1 Score: " + player1[2].toNumber());
-        console.log("PLayer 2 Score: " + player2[2].toNumber());
+        //there should have been a winner
+        assert.equal(player1[2].toNumber(), 1, "Player 1 points don't match expected");
+        assert.equal(player2[2].toNumber(), 6, "Player 2 points don't match expected");
+
+        //Round 3
+        await instance.playerChoose(CHOICES["Share"], { from: accounts[0] });
+        await instance.playerChoose(CHOICES["Take"], { from: accounts[1] });
+        var player1 = await instance.players.call(accounts[0]);
+        var player2 = await instance.players.call(accounts[1]);
+    
+        //both player choices should be reset
+        assert.equal(player1[1].toNumber(), 0, "PLayer 1 choice was not reset");
+        assert.equal(player2[1].toNumber(), 0, "PLayer 2 choice was not reset");
+
+        //there should have been a winner
+        assert.equal(player1[2].toNumber(), 1, "Player 1 points don't match expected");
+        assert.equal(player2[2].toNumber(), 11, "Player 2 points don't match expected");
+
+        //Round 4
+        await instance.playerChoose(CHOICES["Share"], { from: accounts[0] });
+        await instance.playerChoose(CHOICES["Take"], { from: accounts[1] });
+        var player1 = await instance.players.call(accounts[0]);
+        var player2 = await instance.players.call(accounts[1]);
+    
+        //both player choices should be reset
+        assert.equal(player1[1].toNumber(), 0, "PLayer 1 choice was not reset");
+        assert.equal(player2[1].toNumber(), 0, "PLayer 2 choice was not reset");
+
+        //there should have been a winner
+        assert.equal(player1[2].toNumber(), 1, "Player 1 points don't match expected");
+        assert.equal(player2[2].toNumber(), 16, "Player 2 points don't match expected");
+
+        //Round 5
+        await instance.playerChoose(CHOICES["Share"], { from: accounts[0] });
+        await instance.playerChoose(CHOICES["Take"], { from: accounts[1] });
+        var player1 = await instance.players.call(accounts[0]);
+        var player2 = await instance.players.call(accounts[1]);
+    
+        //both player choices should be reset
+        assert.equal(player1[1].toNumber(), 0, "PLayer 1 choice was not reset");
+        assert.equal(player2[1].toNumber(), 0, "PLayer 2 choice was not reset");
+
+        //there should have been a winner
+        assert.equal(player1[2].toNumber(), 1, "Player 1 points don't match expected");
+        assert.equal(player2[2].toNumber(), 21, "Player 2 points don't match expected");
+
     });
 });
