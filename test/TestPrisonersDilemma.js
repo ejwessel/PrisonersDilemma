@@ -7,7 +7,8 @@ var EMPTY_ADDRESS = "0x0000000000000000000000000000000000000000";
 contract('PrisonersDilemma', async (accounts) => {
 
     beforeEach(async() => {
-        instance = await PrisonersDilemma.deployed();
+        //instance = await PrisonersDilemma.deployed();
+        instance = await PrisonersDilemma.new(accounts[0], accounts[1], { from: accounts[2] });
     });
 
     it("Test Initial State of contract", async() => {
@@ -65,11 +66,18 @@ contract('PrisonersDilemma', async (accounts) => {
         var playerScore = await instance.getPlayerScore(accounts[0], { from: accounts[0] });
         assert.equal(playerScore, 0, `player score ${ playerScore } does not match a score of 0`);
     });
-
-   it("Test scoring", async() => {
-        //Test opponent player makes a choice
+    
+    it("Test scoring", async() => {
+        var player = await instance.players.call(accounts[0]);
+        await instance.playerChoose(CHOICES["Share"], { from: accounts[0] });
         await instance.playerChoose(CHOICES["Share"], { from: accounts[1] });
-        player = await instance.players.call(accounts[2]);
-        console.log(player[2].toNumber());
-   });
+        var player1 = await instance.players.call(accounts[0]);
+        var player2 = await instance.players.call(accounts[1]);
+    
+        console.log(player1[1].toNumber());
+        console.log(player2[1].toNumber());
+
+        console.log(player1[2].toNumber());
+        console.log(player2[2].toNumber());
+    });
 });

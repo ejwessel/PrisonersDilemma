@@ -58,8 +58,8 @@ contract PrisonersDilemma {
         players[msg.sender].choice = choice;
         emit PlayerSelectedChoice(msg.sender);
 
-        tallyPlayerScores();
-        checkForWinner();
+        //tallyPlayerScores();
+        //checkForWinner();
     }
 
     function tallyPlayerScores() private {
