@@ -80,8 +80,8 @@ contract('PrisonersDilemma', async (accounts) => {
         var player2 = await instance.players.call(accounts[1]);
     
         //both player choices should be reset
-        assert.equal(player1[1].toNumber(), 0, "PLayer 1 choice was not reset");
-        assert.equal(player2[1].toNumber(), 0, "PLayer 2 choice was not reset");
+        assert.equal(player1[1].toNumber(), 0, "Player 1 choice was not reset");
+        assert.equal(player2[1].toNumber(), 0, "Player 2 choice was not reset");
 
         //there should have been a winner
         var player1Score = await instance.getPlayerScore(accounts[0]);
@@ -108,8 +108,8 @@ contract('PrisonersDilemma', async (accounts) => {
         var player2 = await instance.players.call(accounts[1]);
     
         //both player choices should be reset
-        assert.equal(player1[1].toNumber(), 0, "PLayer 1 choice was not reset");
-        assert.equal(player2[1].toNumber(), 0, "PLayer 2 choice was not reset");
+        assert.equal(player1[1].toNumber(), 0, "Player 1 choice was not reset");
+        assert.equal(player2[1].toNumber(), 0, "Player 2 choice was not reset");
 
         //there should be no winner
         var player1Score = await instance.getPlayerScore(accounts[0]);
@@ -133,8 +133,8 @@ contract('PrisonersDilemma', async (accounts) => {
         var player2 = await instance.players.call(accounts[1]);
     
         //both player choices should be reset
-        assert.equal(player1[1].toNumber(), 0, "PLayer 1 choice was not reset");
-        assert.equal(player2[1].toNumber(), 0, "PLayer 2 choice was not reset");
+        assert.equal(player1[1].toNumber(), 0, "Player 1 choice was not reset");
+        assert.equal(player2[1].toNumber(), 0, "Player 2 choice was not reset");
 
         //there should be no winner
         var player1Score = await instance.getPlayerScore(accounts[0]);
