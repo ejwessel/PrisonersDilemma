@@ -70,18 +70,11 @@ contract('PrisonersDilemma', async (accounts) => {
         //Round 1
         await instance.playerChoose(CHOICES["Share"], { from: accounts[0] });
         await instance.playerChoose(CHOICES["Share"], { from: accounts[1] });
-        //Round 2
-        await instance.playerChoose(CHOICES["Share"], { from: accounts[0] });
-        await instance.playerChoose(CHOICES["Take"], { from: accounts[1] });
-        //Round 3
-        await instance.playerChoose(CHOICES["Share"], { from: accounts[0] });
-        await instance.playerChoose(CHOICES["Take"], { from: accounts[1] });
-        //Round 4
-        await instance.playerChoose(CHOICES["Share"], { from: accounts[0] });
-        await instance.playerChoose(CHOICES["Take"], { from: accounts[1] });
-        //Round 5
-        await instance.playerChoose(CHOICES["Share"], { from: accounts[0] });
-        await instance.playerChoose(CHOICES["Take"], { from: accounts[1] });
+
+        for(i = 0; i < 4; i++) {
+            await instance.playerChoose(CHOICES["Share"], { from: accounts[0] });
+            await instance.playerChoose(CHOICES["Take"], { from: accounts[1] });
+        }
 
         var player1 = await instance.players.call(accounts[0]);
         var player2 = await instance.players.call(accounts[1]);
