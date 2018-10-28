@@ -67,7 +67,7 @@ contract('PrisonersDilemma', async (accounts) => {
         assert.equal(playerScore, 0, `player score ${ playerScore } does not match a score of 0`);
     });
     
-    it("Test scoring", async() => {
+    it("Test scoring with 1 winner", async() => {
         //Round 1
         await instance.playerChoose(CHOICES["Share"], { from: accounts[0] });
         await instance.playerChoose(CHOICES["Share"], { from: accounts[1] });
@@ -96,8 +96,33 @@ contract('PrisonersDilemma', async (accounts) => {
         var player2Score = await instance.getPlayerScore(accounts[1]);
         assert.equal(player1Score, 1, `Player 1 points should be 1, not ${ player1Score }`);
         assert.equal(player2Score, 21, `Player 2 points should be 21, not ${ player2Score }`);
-        assert.equal(player1[2].toNumber(), 1, "Player 1 points don't match expected");
-        assert.equal(player2[2].toNumber(), 21, "Player 2 points don't match expected");
+
+        var contractWinner = await instance.winner();
+        assert.equal(contractWinner, accounts[1], `contract winner ${ contractWinner }, does not match expected ${ accounts[1] }`);
+
+        //Test if a player can continue to play after there is a winner
+        await expectThrow(instance.playerChoose(CHOICES["Take"], { from: accounts[0] }))
+    });
+    
+    it("Test scoring with no winner", async() => {
+
+        for(i = 0; i < 20; i++) {
+            await instance.playerChoose(CHOICES["Share"], { from: accounts[0] });
+            await instance.playerChoose(CHOICES["Share"], { from: accounts[1] });
+        }
+
+        var player1 = await instance.players.call(accounts[0]);
+        var player2 = await instance.players.call(accounts[1]);
+    
+        //both player choices should be reset
+        assert.equal(player1[1].toNumber(), 0, "PLayer 1 choice was not reset");
+        assert.equal(player2[1].toNumber(), 0, "PLayer 2 choice was not reset");
+
+        //there should have been a winner
+        var player1Score = await instance.getPlayerScore(accounts[0]);
+        var player2Score = await instance.getPlayerScore(accounts[1]);
+        assert.equal(player1Score, 20, `Player 1 points should be 20, not ${ player1Score }`);
+        assert.equal(player2Score, 20, `Player 2 points should be 20, not ${ player2Score }`);
 
         var contractWinner = await instance.winner();
         assert.equal(contractWinner, accounts[1], `contract winner ${ contractWinner }, does not match expected ${ accounts[1] }`);
