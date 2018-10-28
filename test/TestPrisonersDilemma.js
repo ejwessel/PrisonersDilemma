@@ -138,5 +138,7 @@ contract('PrisonersDilemma', async (accounts) => {
         assert.equal(player1[2].toNumber(), 1, "Player 1 points don't match expected");
         assert.equal(player2[2].toNumber(), 21, "Player 2 points don't match expected");
 
+        var contractWinner = await instance.winner();
+        assert.equal(contractWinner, accounts[1], "contract winner doesn't match expected.");
     });
 });

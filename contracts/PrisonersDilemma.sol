@@ -59,7 +59,7 @@ contract PrisonersDilemma {
         emit PlayerSelectedChoice(msg.sender);
 
         tallyPlayerScores();
-        //checkForWinner();
+        checkForWinner();
     }
 
     function tallyPlayerScores() private {
@@ -94,8 +94,8 @@ contract PrisonersDilemma {
 
     function checkForWinner() private {
         //get players
-        Player memory player1 = players[playerList[0]];
-        Player memory player2 = players[playerList[1]];
+        Player storage player1 = players[playerList[0]];
+        Player storage player2 = players[playerList[1]];
         
         if (player1.score < WINNING_SCORE && player2.score < WINNING_SCORE) {
             //no winner keep playing
