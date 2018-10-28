@@ -69,6 +69,7 @@ contract PrisonersDilemma {
 
         //check either player hasn't made a choice and exit
         if ((player1.choice == ActionChoices.NoChoice) || (player2.choice == ActionChoices.NoChoice)) {
+            //I don't require here because require would refund gas
             return;
         }
 
