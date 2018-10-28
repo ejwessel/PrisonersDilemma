@@ -25,6 +25,7 @@ contract PrisonersDilemma {
     event PlayersScoresTallied();
     event AlertWinner(address _player);
 
+    //TODO: read in player info, and scoring info
     constructor(address _player1, address _player2) public {
 
         players[_player1] = Player(_player1, ActionChoices.NoChoice, 0);
