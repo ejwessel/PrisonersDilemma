@@ -111,7 +111,7 @@ contract('PrisonersDilemma', async (accounts) => {
         assert.equal(player1[1].toNumber(), 0, "PLayer 1 choice was not reset");
         assert.equal(player2[1].toNumber(), 0, "PLayer 2 choice was not reset");
 
-        //there should no winner
+        //there should be no winner
         var player1Score = await instance.getPlayerScore(accounts[0]);
         var player2Score = await instance.getPlayerScore(accounts[1]);
         assert.equal(player1Score, 20, `Player 1 points should be 20, not ${ player1Score }`);
@@ -119,5 +119,20 @@ contract('PrisonersDilemma', async (accounts) => {
 
         var contractWinner = await instance.winner();
         assert.equal(contractWinner, instance.address, `contract winner ${ contractWinner }, does not match expected ${ instance.address }`);
+    });
+
+    it("Test scoring with no progression", async() => {
+
+        //create 2 rounds
+        for(i = 0; i < 2; i++) {
+            await instance.playerChoose(CHOICES["Take"], { from: accounts[0] });
+            await instance.playerChoose(CHOICES["Take"], { from: accounts[1] });
+        }
+
+        //there should be no winner
+        var player1Score = await instance.getPlayerScore(accounts[0]);
+        var player2Score = await instance.getPlayerScore(accounts[1]);
+        assert.equal(player1Score, 0, `Player 1 points should be 0, not ${ player1Score }`);
+        assert.equal(player2Score, 0, `Player 2 points should be 0, not ${ player2Score }`);
     });
 });

@@ -74,17 +74,15 @@ contract PrisonersDilemma {
         }
 
         //tally player scores
-        if(player1.choice == ActionChoices.Take && player2.choice == ActionChoices.Take) {
-            //both players are awarded 0 points
-            return;
+        if(player1.choice == ActionChoices.Share && player2.choice == ActionChoices.Share){
+            player2.score += MUTUAL_POINTS;
+            player1.score += MUTUAL_POINTS;
         } else if (player1.choice == ActionChoices.Share && player2.choice == ActionChoices.Take) {
             player2.score += GREEDY_POINTS;
         } else if (player1.choice == ActionChoices.Take && player2.choice == ActionChoices.Share) {
             player1.score += GREEDY_POINTS;
-        } else {
-            player2.score += MUTUAL_POINTS;
-            player1.score += MUTUAL_POINTS;
         }
+        //Implicit else both players are awarded 0 points
 
         //reset player choices for next round
         player1.choice = ActionChoices.NoChoice;
