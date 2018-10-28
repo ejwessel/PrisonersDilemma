@@ -7,7 +7,6 @@ var EMPTY_ADDRESS = "0x0000000000000000000000000000000000000000";
 contract('PrisonersDilemma', async (accounts) => {
 
     beforeEach(async() => {
-        //instance = await PrisonersDilemma.deployed();
         instance = await PrisonersDilemma.new(accounts[0], accounts[1]);
     });
 
@@ -106,6 +105,7 @@ contract('PrisonersDilemma', async (accounts) => {
     
     it("Test scoring with no winner", async() => {
 
+        //create 20 rounds
         for(i = 0; i < 20; i++) {
             await instance.playerChoose(CHOICES["Share"], { from: accounts[0] });
             await instance.playerChoose(CHOICES["Share"], { from: accounts[1] });
@@ -125,6 +125,6 @@ contract('PrisonersDilemma', async (accounts) => {
         assert.equal(player2Score, 20, `Player 2 points should be 20, not ${ player2Score }`);
 
         var contractWinner = await instance.winner();
-        assert.equal(contractWinner, accounts[1], `contract winner ${ contractWinner }, does not match expected ${ accounts[1] }`);
+        assert.equal(contractWinner, instance.address, `contract winner ${ contractWinner }, does not match expected ${ instance.address }`);
     });
 });
