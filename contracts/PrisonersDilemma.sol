@@ -3,9 +3,6 @@ pragma solidity ^0.4.24;
 contract PrisonersDilemma {
 
     //Constants
-    uint constant private WINNING_SCORE = 20;
-    uint constant private GREEDY_POINTS = 5;
-    uint constant private MUTUAL_POINTS = 1;
     enum ActionChoices { NoChoice, Share, Take }
 
     struct Player {
@@ -18,6 +15,9 @@ contract PrisonersDilemma {
     address[] private playerList;
     mapping (address => Player) public players;
     address public winner = address(0); //empty address
+    uint private WINNING_SCORE;
+    uint private GREEDY_POINTS;
+    uint private MUTUAL_POINTS;
 
     //Events
     event ContractInitialized(address _player1, address _player2);
@@ -25,16 +25,28 @@ contract PrisonersDilemma {
     event PlayersScoresTallied();
     event AlertWinner(address _player);
 
-    //TODO: read in player info, and scoring info
-    constructor(address _player1, address _player2) public {
+    constructor(uint[] _player1, uint[] _player2, uint[] _scoringData) public {
 
-        players[_player1] = Player(_player1, ActionChoices.NoChoice, 0);
-        playerList.push(_player1);
+        address player1Addr = address(_player1[0]);
+        address player2Addr = address(_player2[0]);
+
+        ActionChoices player1Choice = ActionChoices(_player1[1]);
+        ActionChoices player2Choice = ActionChoices(_player2[1]);
+
+        uint player1Score = _player1[2];
+        uint player2Score = _player2[2];
+
+        players[player1Addr] = Player(player1Addr, player1Choice, player1Score);
+        playerList.push(player1Addr);
         
-        players[_player2] = Player(_player2, ActionChoices.NoChoice, 0);
-        playerList.push(_player2);
+        players[player2Addr] = Player(player2Addr, player2Choice, player2Score);
+        playerList.push(player2Addr);
 
-        emit ContractInitialized(_player1, _player2);
+        WINNING_SCORE = _scoringData[0];
+        GREEDY_POINTS = _scoringData[1];
+        MUTUAL_POINTS = _scoringData[2];
+
+        emit ContractInitialized(player1Addr, player2Addr);
     }
 
     //Functions:

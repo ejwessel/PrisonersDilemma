@@ -7,7 +7,10 @@ var EMPTY_ADDRESS = "0x0000000000000000000000000000000000000000";
 contract('PrisonersDilemma', async (accounts) => {
 
     beforeEach(async() => {
-        instance = await PrisonersDilemma.new(accounts[0], accounts[1]);
+        instance = await PrisonersDilemma.new(
+            [accounts[0], CHOICES[0], 0], 
+            [accounts[1], CHOICES[0], 0],
+            [20, 5, 1]);
     });
 
     it("Test Initial State of contract", async() => {
