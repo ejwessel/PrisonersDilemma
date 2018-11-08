@@ -2,7 +2,6 @@ pragma solidity ^0.4.24;
 
 contract PrisonersDilemma {
 
-    //Constants
     enum ActionChoices { NoChoice, Share, Take }
 
     struct Player {
@@ -12,15 +11,15 @@ contract PrisonersDilemma {
     }
 
     //State Variables
+    uint private winning_score;
+    uint private greedy_points;
+    uint private mutual_points;
     address[] private playerList;
     mapping (address => Player) public players;
     address public winner = address(0); //empty address
-    uint private WINNING_SCORE;
-    uint private GREEDY_POINTS;
-    uint private MUTUAL_POINTS;
 
     //Events
-    event ContractInitialized(address _player1, address _player2);
+    event ContractInitialized(address player1Addr, address player2Addr, uint[] scoringData);
     event PlayerSelectedChoice(address _player);
     event PlayersScoresTallied();
     event AlertWinner(address _player);
@@ -42,11 +41,11 @@ contract PrisonersDilemma {
         players[player2Addr] = Player(player2Addr, player2Choice, player2Score);
         playerList.push(player2Addr);
 
-        WINNING_SCORE = _scoringData[0];
-        GREEDY_POINTS = _scoringData[1];
-        MUTUAL_POINTS = _scoringData[2];
+        winning_score = _scoringData[0];
+        greedy_points = _scoringData[1];
+        mutual_points = _scoringData[2];
 
-        emit ContractInitialized(player1Addr, player2Addr);
+        emit ContractInitialized(player1Addr, player2Addr, _scoringData);
     }
 
     //Functions:
@@ -88,12 +87,12 @@ contract PrisonersDilemma {
 
         //tally player scores
         if(player1.choice == ActionChoices.Share && player2.choice == ActionChoices.Share){
-            player2.score += MUTUAL_POINTS;
-            player1.score += MUTUAL_POINTS;
+            player2.score += mutual_points;
+            player1.score += mutual_points;
         } else if (player1.choice == ActionChoices.Share && player2.choice == ActionChoices.Take) {
-            player2.score += GREEDY_POINTS;
+            player2.score += greedy_points;
         } else if (player1.choice == ActionChoices.Take && player2.choice == ActionChoices.Share) {
-            player1.score += GREEDY_POINTS;
+            player1.score += greedy_points;
         }
         //Implicit else both players are awarded 0 points
 
@@ -109,13 +108,13 @@ contract PrisonersDilemma {
         Player storage player1 = players[playerList[0]];
         Player storage player2 = players[playerList[1]];
         
-        if (player1.score < WINNING_SCORE && player2.score < WINNING_SCORE) {
+        if (player1.score < winning_score && player2.score < winning_score) {
             //no winner keep playing
             return;
-        } else if(player1.score >= WINNING_SCORE && player2.score >= WINNING_SCORE) {
+        } else if(player1.score >= winning_score && player2.score >= winning_score) {
             //there is no winner, set the winner as the contract
             winner = this;
-        } else if (player1.score >= WINNING_SCORE) {
+        } else if (player1.score >= winning_score) {
             winner = player1.addr;
         } else {
             winner = player2.addr;
