@@ -46,6 +46,11 @@ contract PrisonersDilemma {
         mutual_points = _scoringData[2];
 
         emit ContractInitialized(player1Addr, player2Addr, _scoringData);
+
+        //provided if we pass in player state we should tally and check for winner
+        //this will add gas cost
+        tallyPlayerScores();
+        checkForWinner();
     }
 
     //Functions:
