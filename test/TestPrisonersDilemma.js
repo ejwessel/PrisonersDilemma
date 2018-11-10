@@ -7,7 +7,10 @@ var EMPTY_ADDRESS = "0x0000000000000000000000000000000000000000";
 contract('PrisonersDilemma', async (accounts) => {
 
     beforeEach(async() => {
-        instance = await PrisonersDilemma.new(accounts[0], accounts[1]);
+        instance = await PrisonersDilemma.new(
+            [accounts[0], CHOICES["No_Choice"], 0], 
+            [accounts[1], CHOICES["No_Choice"], 0],
+            [20, 5, 1]);
     });
 
     it("Test Initial State of contract", async() => {
@@ -66,8 +69,81 @@ contract('PrisonersDilemma', async (accounts) => {
         assert.equal(playerScore, 0, `player score ${ playerScore } does not match a score of 0`);
     });
     
+    it("Test player choices reset", async() => {
+        instance = await PrisonersDilemma.new(
+            [accounts[0], CHOICES["Take"], 0], 
+            [accounts[1], CHOICES["Take"], 0],
+            [1, 1, 1]);
+
+        var player1 = await instance.players.call(accounts[0]);
+        var player2 = await instance.players.call(accounts[1]);
+
+        //both player choices should be reset
+        assert.equal(player1[1].toNumber(), 0, "Player 1 choice was not reset");
+        assert.equal(player2[1].toNumber(), 0, "Player 2 choice was not reset");
+    });
+
     it("Test scoring with 1 winner", async() => {
-        //Round 1
+        instance = await PrisonersDilemma.new(
+            [accounts[0], CHOICES["Share"], 0], 
+            [accounts[1], CHOICES["Take"], 0],
+            [1, 1, 1]);
+
+        var player1 = await instance.players.call(accounts[0]);
+        var player2 = await instance.players.call(accounts[1]);
+    
+        //there should have been a winner
+        var player1Score = await instance.getPlayerScore(accounts[0]);
+        var player2Score = await instance.getPlayerScore(accounts[1]);
+        assert.equal(player1Score, 0, `Player 1 points should be 0, not ${ player1Score }`);
+        assert.equal(player2Score, 1, `Player 2 points should be 1, not ${ player2Score }`);
+
+        var contractWinner = await instance.winner();
+        assert.equal(contractWinner, accounts[1], `contract winner ${ contractWinner }, does not match expected ${ accounts[1] }`);
+
+        //Test if a player can continue to play after there is a winner
+        await expectThrow(instance.playerChoose(CHOICES["Take"], { from: accounts[0] }))
+    });
+    
+    it("Test scoring with no winner", async() => {
+        instance = await PrisonersDilemma.new(
+            [accounts[0], CHOICES["Share"], 0], 
+            [accounts[1], CHOICES["Share"], 0],
+            [1, 1, 1]);
+
+        var player1 = await instance.players.call(accounts[0]);
+        var player2 = await instance.players.call(accounts[1]);
+    
+        //there should be no winner
+        var player1Score = await instance.getPlayerScore(accounts[0]);
+        var player2Score = await instance.getPlayerScore(accounts[1]);
+        assert.equal(player1Score, 1, `Player 1 points should be 1, not ${ player1Score }`);
+        assert.equal(player2Score, 1, `Player 2 points should be 1, not ${ player2Score }`);
+
+        var contractWinner = await instance.winner();
+        assert.equal(contractWinner, instance.address, `contract winner ${ contractWinner }, does not match expected ${ instance.address }`);
+
+        //Test if a player can continue to play after the game is over with no winner
+        await expectThrow(instance.playerChoose(CHOICES["Take"], { from: accounts[0] }))
+    });
+
+    it("Test scoring with no progression", async() => {
+        instance = await PrisonersDilemma.new(
+            [accounts[0], CHOICES["Take"], 0], 
+            [accounts[1], CHOICES["Take"], 0],
+            [1, 1, 1]);
+
+        var player1 = await instance.players.call(accounts[0]);
+        var player2 = await instance.players.call(accounts[1]);
+    
+        //there should be no winner
+        var player1Score = await instance.getPlayerScore(accounts[0]);
+        var player2Score = await instance.getPlayerScore(accounts[1]);
+        assert.equal(player1Score, 0, `Player 1 points should be 0, not ${ player1Score }`);
+        assert.equal(player2Score, 0, `Player 2 points should be 0, not ${ player2Score }`);
+    });
+
+    it("Test an actual game", async() => {
         await instance.playerChoose(CHOICES["Share"], { from: accounts[0] });
         await instance.playerChoose(CHOICES["Share"], { from: accounts[1] });
 
@@ -94,52 +170,5 @@ contract('PrisonersDilemma', async (accounts) => {
 
         //Test if a player can continue to play after there is a winner
         await expectThrow(instance.playerChoose(CHOICES["Take"], { from: accounts[0] }))
-    });
-    
-    it("Test scoring with no winner", async() => {
-
-        //create 20 rounds
-        for(i = 0; i < 20; i++) {
-            await instance.playerChoose(CHOICES["Share"], { from: accounts[0] });
-            await instance.playerChoose(CHOICES["Share"], { from: accounts[1] });
-        }
-
-        var player1 = await instance.players.call(accounts[0]);
-        var player2 = await instance.players.call(accounts[1]);
-    
-        //both player choices should be reset
-        assert.equal(player1[1].toNumber(), 0, "Player 1 choice was not reset");
-        assert.equal(player2[1].toNumber(), 0, "Player 2 choice was not reset");
-
-        //there should be no winner
-        var player1Score = await instance.getPlayerScore(accounts[0]);
-        var player2Score = await instance.getPlayerScore(accounts[1]);
-        assert.equal(player1Score, 20, `Player 1 points should be 20, not ${ player1Score }`);
-        assert.equal(player2Score, 20, `Player 2 points should be 20, not ${ player2Score }`);
-
-        var contractWinner = await instance.winner();
-        assert.equal(contractWinner, instance.address, `contract winner ${ contractWinner }, does not match expected ${ instance.address }`);
-    });
-
-    it("Test scoring with no progression", async() => {
-
-        //create 2 rounds
-        for(i = 0; i < 2; i++) {
-            await instance.playerChoose(CHOICES["Take"], { from: accounts[0] });
-            await instance.playerChoose(CHOICES["Take"], { from: accounts[1] });
-        }
-
-        var player1 = await instance.players.call(accounts[0]);
-        var player2 = await instance.players.call(accounts[1]);
-    
-        //both player choices should be reset
-        assert.equal(player1[1].toNumber(), 0, "Player 1 choice was not reset");
-        assert.equal(player2[1].toNumber(), 0, "Player 2 choice was not reset");
-
-        //there should be no winner
-        var player1Score = await instance.getPlayerScore(accounts[0]);
-        var player2Score = await instance.getPlayerScore(accounts[1]);
-        assert.equal(player1Score, 0, `Player 1 points should be 0, not ${ player1Score }`);
-        assert.equal(player2Score, 0, `Player 2 points should be 0, not ${ player2Score }`);
     });
 });
