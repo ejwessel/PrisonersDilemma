@@ -1,5 +1,6 @@
 pragma solidity ^0.4.24;
 
+/** @title Prisoners Dilemma **/
 contract PrisonersDilemma {
 
     enum ActionChoices { NoChoice, Share, Take }
@@ -24,6 +25,12 @@ contract PrisonersDilemma {
     event PlayersScoresTallied();
     event AlertWinner(address _player);
 
+    /** @dev Instantiates the Prisoners Dilemma
+      * @param _player1 An array of Player 1 data [address, initialChoice, initialScore]
+      * @param _player2 An array of Player 2 data [address, initialChoice, initialScore]
+      * @param _scoringData An array of scoring data that the game is going to follow 
+      * [winning score, greedy score, mutual score]
+      */
     constructor(uint[] _player1, uint[] _player2, uint[] _scoringData) public {
 
         address player1Addr = address(_player1[0]);
@@ -53,9 +60,10 @@ contract PrisonersDilemma {
         checkForWinner();
     }
 
-    //Functions:
-    //function for a player to select a choice
-    function playerChoose(ActionChoices choice) public returns (ActionChoices){ 
+    /** @dev Function for a player to select a choice
+      * @param choice the players choice that needs to be saved
+      */
+    function playerChoose(ActionChoices choice) public { 
 
         //Require player is within the players mapping
         //0 is default value. We aren't going to allow default values
@@ -79,6 +87,7 @@ contract PrisonersDilemma {
         checkForWinner();
     }
 
+    /** @dev Tallies the player's scores given their choices */
     function tallyPlayerScores() private {
         //get players
         Player storage player1 = players[playerList[0]];
@@ -108,6 +117,7 @@ contract PrisonersDilemma {
         emit PlayersScoresTallied();
     }
 
+    /** @dev Method checks for a winner given the points of the users */
     function checkForWinner() private {
         //get players
         Player storage player1 = players[playerList[0]];
@@ -127,7 +137,10 @@ contract PrisonersDilemma {
         emit AlertWinner(winner);
     }
 
-    //function to get a player's scores
+    /** @dev Function to get a player's scores
+      * @param playerAddr the players address we want to get a score for
+      * @return the player's score
+      */
     function getPlayerScore(address playerAddr) public view returns (uint){
 
         //require the player is in the map in order to look them up
