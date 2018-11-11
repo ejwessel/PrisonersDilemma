@@ -5,6 +5,7 @@ The contract can dynamically be set for the following scoring parameters:
 - Greed Score: The score awarded to the player that 'takes' if another player 'shares' (score 5 below)
 - Mutual Score: The score awarded to both players if they both 'share' (score 1 below)
 
+```
 +----------+----------------------+
 |          |       Player 2       |
 +----------+----------------------+
@@ -14,6 +15,7 @@ The contract can dynamically be set for the following scoring parameters:
 +          +-------+-------+------+
 |          | Take  | 0/5   | 0/0  |
 +----------+-------+-------+------+
+```
 Example Rules:
 Winning Score = 20
 Greed Score = 5
