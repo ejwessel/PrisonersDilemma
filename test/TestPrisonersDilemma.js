@@ -13,6 +13,10 @@ contract('PrisonersDilemma', async (accounts) => {
             [20, 5, 1]);
     });
 
+    afterEach(async() => {
+        await instance.endGame();
+    });
+
     it("Test Initial State of contract", async() => {
         //Get Player from mapping
         var player = await instance.players.call(accounts[0]);

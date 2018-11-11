@@ -24,6 +24,7 @@ contract PrisonersDilemma {
     event PlayerSelectedChoice(address _player);
     event PlayersScoresTallied();
     event AlertWinner(address _player);
+    event ContractDeleted();
 
     /** @dev Instantiates the Prisoners Dilemma
       * @param _player1 An array of Player 1 data [address, initialChoice, initialScore]
@@ -146,5 +147,10 @@ contract PrisonersDilemma {
         //require the player is in the map in order to look them up
         require(players[playerAddr].addr != address(0), "Player address is not in contract");
         return players[playerAddr].score;
+    }
+
+    function endGame() public {
+        emit ContractDeleted();
+        selfdestruct(address(0));
     }
 }
