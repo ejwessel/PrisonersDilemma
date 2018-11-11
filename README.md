@@ -1,4 +1,3 @@
-```
 Contract mimics that of the Prisoners's Dilemma
 
 The contract can dynamically be set for the following scoring parameters:
@@ -24,4 +23,3 @@ Mutual Score = 1
 - If either one of the players 'take's while the other player 'shares', the person who shared will receive no points while the person who takes will receive 5 points
 - Game ends when one of the players obtain the winning score of 20 points
 - Ties are possible in which no players win, the contract winner is the contract address itself.
-```
