@@ -151,6 +151,6 @@ contract PrisonersDilemma {
 
     function endGame() public {
         emit ContractDeleted();
-        selfdestruct(address(0));
+        selfdestruct(0);
     }
 }
