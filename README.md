@@ -16,12 +16,10 @@ The contract can dynamically be set for the following scoring parameters:
 |          | Take  | 0/5   | 0/0  |
 +----------+-------+-------+------+
 ```
-Example Rules:
-Winning Score = 20
-Greed Score = 5
-Mutual Score = 1
+Example:
+- Winning Score = 20, Greed Score = 5, Mutual Score = 1
 - If two placers 'share' they both receive 1 point and the game progresses
 - If two players 'take', they receive no points and the game doesn't progress
-- If either one of the players 'take's while the other player 'shares', the person who shared will receive no points while the person who takes will receive 5 points
+- If either one of the players 'takes' while the other player 'shares', the person who 'shared' will receive no points while the person who 'takes' will receive 5 points
 - Game ends when one of the players obtain the winning score of 20 points
-- Ties are possible in which no players win, the contract winner is the contract address itself.
+- If a tie occurs no players win, the contract winner is the contract itself.
