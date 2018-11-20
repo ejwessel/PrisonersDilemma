@@ -175,4 +175,37 @@ contract('PrisonersDilemma', async (accounts) => {
         //Test if a player can continue to play after there is a winner
         await expectThrow(instance.playerChoose(CHOICES["Take"], { from: accounts[0] }))
     });
+
+    it("Gas Analysis", async() => {
+        var estimate = 0;
+        var receipt = 0;
+
+        console.log(web3.version.api);
+        console.log(web3.version.ethereum);
+
+        instance = await PrisonersDilemma.new(
+            [accounts[0], CHOICES["No_Choice"], 0], 
+            [accounts[1], CHOICES["No_Choice"], 0],
+            [1, 1, 1]);
+
+//        console.log(instance.estimateGas);
+//        estimate = await web3.eth.estimateGas(instance);
+//        console.log(estimate);
+        //receipt = await web3.eth.getTransactionReceipt(instance.transactionHash);
+        //console.log(`Constructor - Gas estimate: ${ web3.fromWei(estimate, "ether") } Gas Used: ${ web3.fromWei(receipt.gasUsed, "ether") }`);
+       
+        //=====================================================================
+//        estimate = await web3.eth.estimateGas(
+//            instance.playerChoose(CHOICES["Share"], { from: accounts[0] })
+//        );
+        estimate  = await instance.playerChoose.estimateGas(CHOICES["Share"], { from: accounts[0] });
+
+        instance.playerChoose(CHOICES["Share"], { from: accounts[0] })
+        receipt = await web3.eth.getTransactionReceipt(instance.transactionHash);
+
+        console.log("playerChoose");
+        console.log(`Gas estimate: ${ web3.fromWei(estimate, "ether") }`);
+        console.log(`Gas Used: ${ web3.fromWei(receipt.gasUsed, "ether") }`);
+        console.log(`${ receipt.gasUsed / estimate * 100}%`);
+    });
 });
