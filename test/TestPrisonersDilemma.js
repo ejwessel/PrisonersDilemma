@@ -180,13 +180,12 @@ contract('PrisonersDilemma', async (accounts) => {
         var estimate = 0;
         var receipt = 0;
 
-        console.log(web3.version.api);
-        console.log(web3.version.ethereum);
+        console.log(`Web 3 Api Version: ${ web3.version.api }`);
+        console.log(`Web 3 Ethreum Version: ${ web3.version.ethereum }`);
 
         // Create
-        console.log(instance);
         receipt = await web3.eth.getTransactionReceipt(instance.transactionHash);
-        console.log(receipt.gasUsed);
+        console.log(`contract creation gas estimate: ${ receipt.gasUsed }`);
         // Choose
         estimate  = await instance.playerChoose.estimateGas(CHOICES["Share"], { from: accounts[0] });
         console.log(`playerChoose() gas estimate: ${ estimate }`);
