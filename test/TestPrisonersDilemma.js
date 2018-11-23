@@ -19,7 +19,7 @@ contract('PrisonersDilemma', async (accounts) => {
 
     it("Test Initial State of contract", async() => {
         //Get Player from mapping
-        var player = await instance.players.call(accounts[0]);
+        var player = await instance.players(accounts[0]);
         var playerAddr = player[0];
         var playerChoice = player[1].toNumber();
         var playerScore = player[2];
@@ -36,7 +36,7 @@ contract('PrisonersDilemma', async (accounts) => {
 
     it("Test invalid player not in contract", async() => {
         //Get Invalid Player from mapping
-        var player = await instance.players.call(accounts[2]);
+        var player = await instance.players(accounts[2]);
         var playerAddr = player[0];
         //Invalid Player's don't have an address saved for their address
         assert.equal(playerAddr, EMPTY_ADDRESS, `player address ${ playerAddr } was valid and should not be`);
@@ -47,7 +47,7 @@ contract('PrisonersDilemma', async (accounts) => {
         await instance.playerChoose(CHOICES["Share"], { from: accounts[0] });
 
         //Get Player from mapping
-        var player = await instance.players.call(accounts[0]);
+        var player = await instance.players(accounts[0]);
         var playerChoice = player[1].toNumber();
         assert.equal(playerChoice, CHOICES["Share"], `player choice ${ CHOICES["SHARE"] } was not recorded`);
 
@@ -66,10 +66,10 @@ contract('PrisonersDilemma', async (accounts) => {
 
     it("Test getPlayerScore()", async() => {
         //Test if address passed is not in the contract
-        await expectThrow(instance.getPlayerScore(accounts[2], { from: accounts[0] })); 
+        await expectThrow(instance.getPlayerScore(accounts[2])); 
 
         //Test that a player's score can be retrieved        
-        var playerScore = await instance.getPlayerScore(accounts[0], { from: accounts[0] });
+        var playerScore = await instance.getPlayerScore(accounts[0]);
         assert.equal(playerScore, 0, `player score ${ playerScore } does not match a score of 0`);
     });
     
@@ -79,8 +79,8 @@ contract('PrisonersDilemma', async (accounts) => {
             [accounts[1], CHOICES["Take"], 0],
             [1, 1, 1]);
 
-        var player1 = await instance.players.call(accounts[0]);
-        var player2 = await instance.players.call(accounts[1]);
+        var player1 = await instance.players(accounts[0]);
+        var player2 = await instance.players(accounts[1]);
 
         //both player choices should be reset
         assert.equal(player1[1].toNumber(), 0, "Player 1 choice was not reset");
@@ -93,8 +93,8 @@ contract('PrisonersDilemma', async (accounts) => {
             [accounts[1], CHOICES["Take"], 0],
             [1, 1, 1]);
 
-        var player1 = await instance.players.call(accounts[0]);
-        var player2 = await instance.players.call(accounts[1]);
+        var player1 = await instance.players(accounts[0]);
+        var player2 = await instance.players(accounts[1]);
     
         //there should have been a winner
         var player1Score = await instance.getPlayerScore(accounts[0]);
@@ -115,8 +115,8 @@ contract('PrisonersDilemma', async (accounts) => {
             [accounts[1], CHOICES["Share"], 0],
             [1, 1, 1]);
 
-        var player1 = await instance.players.call(accounts[0]);
-        var player2 = await instance.players.call(accounts[1]);
+        var player1 = await instance.players(accounts[0]);
+        var player2 = await instance.players(accounts[1]);
     
         //there should be no winner
         var player1Score = await instance.getPlayerScore(accounts[0]);
@@ -137,8 +137,8 @@ contract('PrisonersDilemma', async (accounts) => {
             [accounts[1], CHOICES["Take"], 0],
             [1, 1, 1]);
 
-        var player1 = await instance.players.call(accounts[0]);
-        var player2 = await instance.players.call(accounts[1]);
+        var player1 = await instance.players(accounts[0]);
+        var player2 = await instance.players(accounts[1]);
     
         //there should be no winner
         var player1Score = await instance.getPlayerScore(accounts[0]);
@@ -156,8 +156,8 @@ contract('PrisonersDilemma', async (accounts) => {
             await instance.playerChoose(CHOICES["Take"], { from: accounts[1] });
         }
 
-        var player1 = await instance.players.call(accounts[0]);
-        var player2 = await instance.players.call(accounts[1]);
+        var player1 = await instance.players(accounts[0]);
+        var player2 = await instance.players(accounts[1]);
     
         //both player choices should be reset
         assert.equal(player1[1].toNumber(), 0, "Player 1 choice was not reset");
@@ -183,29 +183,15 @@ contract('PrisonersDilemma', async (accounts) => {
         console.log(web3.version.api);
         console.log(web3.version.ethereum);
 
-        instance = await PrisonersDilemma.new(
-            [accounts[0], CHOICES["No_Choice"], 0], 
-            [accounts[1], CHOICES["No_Choice"], 0],
-            [1, 1, 1]);
-
-//        console.log(instance.estimateGas);
-//        estimate = await web3.eth.estimateGas(instance);
-//        console.log(estimate);
-        //receipt = await web3.eth.getTransactionReceipt(instance.transactionHash);
-        //console.log(`Constructor - Gas estimate: ${ web3.fromWei(estimate, "ether") } Gas Used: ${ web3.fromWei(receipt.gasUsed, "ether") }`);
-       
-        //=====================================================================
-//        estimate = await web3.eth.estimateGas(
-//            instance.playerChoose(CHOICES["Share"], { from: accounts[0] })
-//        );
-        estimate  = await instance.playerChoose.estimateGas(CHOICES["Share"], { from: accounts[0] });
-
-        instance.playerChoose(CHOICES["Share"], { from: accounts[0] })
+        // Create
+        console.log(instance);
         receipt = await web3.eth.getTransactionReceipt(instance.transactionHash);
-
-        console.log("playerChoose");
-        console.log(`Gas estimate: ${ web3.fromWei(estimate, "ether") }`);
-        console.log(`Gas Used: ${ web3.fromWei(receipt.gasUsed, "ether") }`);
-        console.log(`${ receipt.gasUsed / estimate * 100}%`);
+        console.log(receipt.gasUsed);
+        // Choose
+        estimate  = await instance.playerChoose.estimateGas(CHOICES["Share"], { from: accounts[0] });
+        console.log(`playerChoose() gas estimate: ${ estimate }`);
+        // Destroy 
+        estimate = await instance.endGame.estimateGas();
+        console.log(`endGame() gas estimate: ${ estimate }`);
     });
 });
