@@ -6,6 +6,11 @@ var EMPTY_ADDRESS = "0x0000000000000000000000000000000000000000";
 
 contract('PrisonersDilemma', async (accounts) => {
 
+    before(async() => {
+        console.log(`\tWeb 3 Api Version: ${ web3.version.api }`);
+        console.log(`\tWeb 3 Ethreum Version: ${ web3.version.ethereum }`);
+    });
+
     beforeEach(async() => {
         instance = await PrisonersDilemma.new(
             [accounts[0], CHOICES["No_Choice"], 0], 
@@ -178,19 +183,15 @@ contract('PrisonersDilemma', async (accounts) => {
 
     it("Gas Analysis", async() => {
         var estimate = 0;
-        var receipt = 0;
-
-        console.log(`Web 3 Api Version: ${ web3.version.api }`);
-        console.log(`Web 3 Ethreum Version: ${ web3.version.ethereum }`);
 
         // Create
-        receipt = await web3.eth.getTransactionReceipt(instance.transactionHash);
-        console.log(`contract creation gas estimate: ${ receipt.gasUsed }`);
+        var receipt = await web3.eth.getTransactionReceipt(instance.transactionHash);
+        console.log(`\tcontract creation gas estimate: ${ receipt.gasUsed }`);
         // Choose
         estimate  = await instance.playerChoose.estimateGas(CHOICES["Share"], { from: accounts[0] });
-        console.log(`playerChoose() gas estimate: ${ estimate }`);
+        console.log(`\tplayerChoose() gas estimate: ${ estimate }`);
         // Destroy 
         estimate = await instance.endGame.estimateGas();
-        console.log(`endGame() gas estimate: ${ estimate }`);
+        console.log(`\tendGame() gas estimate: ${ estimate }`);
     });
 });
