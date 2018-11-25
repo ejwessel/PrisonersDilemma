@@ -15,7 +15,7 @@ contract('PrisonersDilemma', async (accounts) => {
         instance = await PrisonersDilemma.new(
             [accounts[0], CHOICES["No_Choice"], 0], 
             [accounts[1], CHOICES["No_Choice"], 0],
-            [20, 5, 1]);
+            [20, 5, 1, 0]);
     });
 
     afterEach(async() => {
@@ -82,7 +82,7 @@ contract('PrisonersDilemma', async (accounts) => {
         instance = await PrisonersDilemma.new(
             [accounts[0], CHOICES["Take"], 0], 
             [accounts[1], CHOICES["Take"], 0],
-            [1, 1, 1]);
+            [1, 1, 1, 0]);
 
         var player1 = await instance.players(accounts[0]);
         var player2 = await instance.players(accounts[1]);
@@ -96,7 +96,7 @@ contract('PrisonersDilemma', async (accounts) => {
         instance = await PrisonersDilemma.new(
             [accounts[0], CHOICES["Share"], 0], 
             [accounts[1], CHOICES["Take"], 0],
-            [1, 1, 1]);
+            [1, 1, 1, 0]);
 
         var player1 = await instance.players(accounts[0]);
         var player2 = await instance.players(accounts[1]);
@@ -118,7 +118,7 @@ contract('PrisonersDilemma', async (accounts) => {
         instance = await PrisonersDilemma.new(
             [accounts[0], CHOICES["Share"], 0], 
             [accounts[1], CHOICES["Share"], 0],
-            [1, 1, 1]);
+            [1, 1, 1, 0]);
 
         var player1 = await instance.players(accounts[0]);
         var player2 = await instance.players(accounts[1]);
@@ -140,7 +140,7 @@ contract('PrisonersDilemma', async (accounts) => {
         instance = await PrisonersDilemma.new(
             [accounts[0], CHOICES["Take"], 0], 
             [accounts[1], CHOICES["Take"], 0],
-            [1, 1, 1]);
+            [1, 1, 1, 0]);
 
         var player1 = await instance.players(accounts[0]);
         var player2 = await instance.players(accounts[1]);
