@@ -15,6 +15,7 @@ contract PrisonersDilemma {
     uint private winning_score;
     uint private greedy_points;
     uint private mutual_points;
+    uint private mutual_greedy_points;
     address[] private playerList;
     mapping (address => Player) public players;
     address public winner = address(0); //empty address
@@ -30,7 +31,7 @@ contract PrisonersDilemma {
       * @param _player1 An array of Player 1 data [address, initialChoice, initialScore]
       * @param _player2 An array of Player 2 data [address, initialChoice, initialScore]
       * @param _scoringData An array of scoring data that the game is going to follow 
-      * [winning score, greedy score, mutual score]
+      * [winning score, greedy score, mutual score, mutual greedy score]
       */
     constructor(uint[] _player1, uint[] _player2, uint[] _scoringData) public {
 
@@ -52,6 +53,7 @@ contract PrisonersDilemma {
         winning_score = _scoringData[0];
         greedy_points = _scoringData[1];
         mutual_points = _scoringData[2];
+        mutual_greedy_points = _scoringData[3];
 
         emit ContractInitialized(player1Addr, player2Addr, _scoringData);
 
@@ -108,8 +110,11 @@ contract PrisonersDilemma {
             player2.score += greedy_points;
         } else if (player1.choice == ActionChoices.Take && player2.choice == ActionChoices.Share) {
             player1.score += greedy_points;
+        } else {
+            //last choice is take/take
+            player1.score += mutual_greedy_points;
+            player2.score += mutual_greedy_points;
         }
-        //Implicit else both players are awarded 0 points
 
         //reset player choices for next round
         player1.choice = ActionChoices.NoChoice;
