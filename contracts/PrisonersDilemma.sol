@@ -11,11 +11,15 @@ contract PrisonersDilemma {
         uint score;
     }
 
+    struct ScoringData {
+        uint winning_score;
+        uint greedy_points;
+        uint mutual_points;
+        uint mutual_greedy_points;
+    }
+
     //State Variables
-    uint private winning_score;
-    uint private greedy_points;
-    uint private mutual_points;
-    uint private mutual_greedy_points;
+    ScoringData private scoringData;
     address[] private playerList;
     mapping (address => Player) public players;
     address public winner = address(0); //empty address
@@ -50,10 +54,7 @@ contract PrisonersDilemma {
         players[player2Addr] = Player(player2Addr, player2Choice, player2Score);
         playerList.push(player2Addr);
 
-        winning_score = _scoringData[0];
-        greedy_points = _scoringData[1];
-        mutual_points = _scoringData[2];
-        mutual_greedy_points = _scoringData[3];
+        scoringData = ScoringData(_scoringData[0], _scoringData[1], _scoringData[2], _scoringData[3]);
 
         emit ContractInitialized(player1Addr, player2Addr, _scoringData);
 
@@ -104,16 +105,16 @@ contract PrisonersDilemma {
 
         //tally player scores
         if(player1.choice == ActionChoices.Share && player2.choice == ActionChoices.Share){
-            player2.score += mutual_points;
-            player1.score += mutual_points;
+            player2.score += scoringData.mutual_points;
+            player1.score += scoringData.mutual_points;
         } else if (player1.choice == ActionChoices.Share && player2.choice == ActionChoices.Take) {
-            player2.score += greedy_points;
+            player2.score += scoringData.greedy_points;
         } else if (player1.choice == ActionChoices.Take && player2.choice == ActionChoices.Share) {
-            player1.score += greedy_points;
+            player1.score += scoringData.greedy_points;
         } else {
             //last choice is take/take
-            player1.score += mutual_greedy_points;
-            player2.score += mutual_greedy_points;
+            player1.score += scoringData.mutual_greedy_points;
+            player2.score += scoringData.mutual_greedy_points;
         }
 
         //reset player choices for next round
@@ -129,13 +130,13 @@ contract PrisonersDilemma {
         Player storage player1 = players[playerList[0]];
         Player storage player2 = players[playerList[1]];
         
-        if (player1.score < winning_score && player2.score < winning_score) {
+        if (player1.score < scoringData.winning_score && player2.score < scoringData.winning_score) {
             //no winner keep playing
             return;
-        } else if(player1.score >= winning_score && player2.score >= winning_score) {
+        } else if(player1.score >= scoringData.winning_score && player2.score >= scoringData.winning_score) {
             //there is no winner, set the winner as the contract
             winner = this;
-        } else if (player1.score >= winning_score) {
+        } else if (player1.score >= scoringData.winning_score) {
             winner = player1.addr;
         } else {
             winner = player2.addr;
