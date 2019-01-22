@@ -3,6 +3,7 @@ import GameJoinComponent from './GameJoinComponents/GameJoinComponent';
 import GameEventLogComponent from './GameEventLogComponents/GameEventLogComponent';
 import GameScoreboardComponent from './GameScoreboardComponents/GameScoreboardComponent';
 import GameTurnsComponent from './GameTurnsComponents/GameTurnsComponent';
+import GameCreateScoringComponent from './GameCreateComponents/GameCreateScoringComponent';
 
 class GameComponent extends Component {
   render() {
@@ -12,6 +13,7 @@ class GameComponent extends Component {
         <GameEventLogComponent />
         <GameScoreboardComponent />
         <GameTurnsComponent />
+        <GameCreateScoringComponent />
       </div>
     );
   }
