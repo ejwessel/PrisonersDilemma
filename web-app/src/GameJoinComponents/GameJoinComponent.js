@@ -9,7 +9,7 @@ class GameJoinComponent extends Component {
         {' '}
         <input
           type = "text"
-          contract_address = "contract address"
+          contract_address = ""
         />
         {' '}
         <input

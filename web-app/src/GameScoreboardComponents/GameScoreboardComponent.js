@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
+import GameScoreboardPlayerScoreComponent from './GameScoreboardPlayerScoreComponent';
 
 class GameScoreboardComponent extends Component {
   render() {
     return (
-      <h1>GameScoreboardComponent</h1>
+      <div>
+        <GameScoreboardPlayerScoreComponent />
+        <GameScoreboardPlayerScoreComponent />
+      </div>
     );
   }
 }
