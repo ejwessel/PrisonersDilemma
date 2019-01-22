@@ -24,3 +24,5 @@ Example:
 - If either one of the players 'takes' while the other player 'shares', the person who 'shared' will receive no points while the person who 'takes' will receive 5 points
 - Game ends when one of the players obtain the winning score of 20 points
 - If a tie occurs no players win, the contract winner is the contract itself.
+
+[Overview of Components](https://docs.google.com/drawings/d/1Dlbt9t-kO-xLnVOJM_JH9CMT60ZX8tReJOANpgGBbps/edit)
