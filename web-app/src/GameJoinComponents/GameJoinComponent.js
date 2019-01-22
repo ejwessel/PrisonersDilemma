@@ -1,9 +1,23 @@
 import React, { Component } from 'react';
 
 class GameJoinComponent extends Component {
+
   render() {
     return (
-      <h1>GameJoinComponent</h1>
+      <form>
+        <label>Contract Address:</label>
+        {' '}
+        <input
+          type = "text"
+          contract_address = "contract address"
+        />
+        {' '}
+        <input
+          type = "button"
+          value = "Join Game"
+          onClick = { this.submitForm }
+        />
+      </form>
     );
   }
 }
