@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
+import GameTurnsPlayerChoiceComponent from './GameTurnsPlayerChoiceComponent';
 
 class GameTurnsComponent extends Component {
   render() {
     return (
-      <h1>GameTurnsComponent</h1>
+      <GameTurnsPlayerChoiceComponent />
     );
   }
 }
