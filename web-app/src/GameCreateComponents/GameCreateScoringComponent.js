@@ -16,35 +16,35 @@ class GameCreateScoringComponent extends Component {
   render() {
     return (
       <div>
-      <label>Scoring:</label>
-      {' '}
-      <input
-        type = "text"
-        win_score = ""
-        value = "Win Score"
-        onChange = { this.handleChange }
-      />
-      {' '}
-      <input
-        type = "text"
-        greed_points = ""
-        value = "Greed Points"
-        onChange = { this.handleChange }
-      />
-      {' '}
-      <input
-        type = "text"
-        mutual_points = ""
-        value = "Mutual Points"
-        onChange = { this.handleChange }
-      />
-      {' '}
-      <input
-        type = "text"
-        mutual_greed_points = ""
-        value = "Mutual Greed Points"
-        onChange = { this.handleChange }
-      />
+        <label>Scoring:</label>
+        {' '}
+        <input
+          type = "text"
+          win_score = ""
+          value = "Win Score"
+          onChange = { this.handleChange }
+        />
+        {' '}
+        <input
+          type = "text"
+          greed_points = ""
+          value = "Greed Points"
+          onChange = { this.handleChange }
+        />
+        {' '}
+        <input
+          type = "text"
+          mutual_points = ""
+          value = "Mutual Points"
+          onChange = { this.handleChange }
+        />
+        {' '}
+        <input
+          type = "text"
+          mutual_greed_points = ""
+          value = "Mutual Greed Points"
+          onChange = { this.handleChange }
+        />
       </div>
     );
   }

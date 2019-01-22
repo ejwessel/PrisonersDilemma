@@ -1,9 +1,15 @@
 import React, { Component } from 'react';
+import GameCreatePlayerComponent from './GameCreatePlayerComponent';
+import GameCreateScoringComponent from './GameCreateScoringComponent';
 
 class GameCreateComponent extends Component {
   render() {
     return (
-      <h1>GameCreateComponent</h1>
+      <div>
+        <GameCreatePlayerComponent />
+        <GameCreatePlayerComponent />
+        <GameCreateScoringComponent />
+      </div>
     );
   }
 }
