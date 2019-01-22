@@ -1,15 +1,28 @@
 import React, { Component } from 'react';
 
 class GameTurnsPlayerChoiceComponent extends Component {
+
+  constructor(props){
+    super(props);
+    this.handleSubmit = this.handleSubmit.bind(this)
+  }
+
+  handleSubmit(event) {
+    console.log("does nothing yet");
+    event.preventDefault();
+    //TODO: move the state upwards
+  }
+
   render() {
     return (
-      <form>
-        <label>Player #</label>
+      <form onSubmit={ this.handleSubmit }>
+        <label>Player # Turn</label>
         {' '}
         <input
           type = "text"
           contract_address = ""
           value = "address"
+          readOnly
         />
         {' '}
         <select>
@@ -19,15 +32,8 @@ class GameTurnsPlayerChoiceComponent extends Component {
         </select>
         {' '}
         <input
-          type = "text"
-          start_score = ""
-          value = "0"
-        />
-        {' '}
-        <input
-          type = "button"
+          type = "submit"
           value = "Select Choice"
-          onClick = { this.submitForm }
         />
       </form>
     );
