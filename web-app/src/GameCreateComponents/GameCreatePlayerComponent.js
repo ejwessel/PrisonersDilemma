@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 class GameCreatePlayerComponent extends Component {
   constructor(props) {
     super(props);
-
     this.handleChange = this.handleChange.bind(this);
   }
 
@@ -14,12 +13,12 @@ class GameCreatePlayerComponent extends Component {
   render() {
     return (
       <div>
-        <label>Player #:</label>
+        <label>Player {this.props.player}:</label>
         {' '}
         <input
           type = "text"
           win_score = ""
-          value = "Address"
+          value = {this.props.addr}
           onChange = { this.handleChange }
         />
         {' '}

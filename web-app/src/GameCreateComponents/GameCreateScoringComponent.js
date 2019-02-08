@@ -21,28 +21,28 @@ class GameCreateScoringComponent extends Component {
         <input
           type = "text"
           win_score = ""
-          value = "Win Score"
+          value = { this.props.win }
           onChange = { this.handleChange }
         />
         {' '}
         <input
           type = "text"
           greed_points = ""
-          value = "Greed Points"
+          value = { this.props.greed }
           onChange = { this.handleChange }
         />
         {' '}
         <input
           type = "text"
           mutual_points = ""
-          value = "Mutual Points"
+          value = { this.props.mutual }
           onChange = { this.handleChange }
         />
         {' '}
         <input
           type = "text"
           mutual_greed_points = ""
-          value = "Mutual Greed Points"
+          value = { this.props.mutual_greed }
           onChange = { this.handleChange }
         />
       </div>

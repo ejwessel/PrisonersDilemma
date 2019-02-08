@@ -9,7 +9,13 @@ class GameComponent extends Component {
   render() {
     return (
       <div>
-        <GameCreateComponent />
+        <GameCreateComponent
+          p1_addr="0001"
+          p2_addr="0002"
+          win="20"
+          greed="10"
+          mutual="1"
+          mutual_greed="0"/>
         <GameJoinComponent />
         <GameEventLogComponent />
         <GameScoreboardComponent />
