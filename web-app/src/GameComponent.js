@@ -5,6 +5,7 @@ import GameScoreboardComponent from './GameScoreboardComponents/GameScoreboardCo
 import GameTurnsComponent from './GameTurnsComponents/GameTurnsComponent';
 import GameCreateComponent from './GameCreateComponents/GameCreateComponent';
 import getWeb3 from './getWeb3';
+import PrisonersDilemmaContract from './contracts/PrisonersDilemma';
 
 class GameComponent extends Component {
   componentDidMount = async () => {
