@@ -7,8 +7,7 @@ var EMPTY_ADDRESS = "0x0000000000000000000000000000000000000000";
 contract('PrisonersDilemma', async (accounts) => {
 
     before(async() => {
-        console.log(`\tWeb 3 Api Version: ${ web3.version.api }`);
-        console.log(`\tWeb 3 Ethreum Version: ${ web3.version.ethereum }`);
+        console.log(`\tWeb 3 Api Version: ${ web3.version }`);
     });
 
     beforeEach(async() => {
