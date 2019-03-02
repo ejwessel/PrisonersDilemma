@@ -12,19 +12,22 @@ class GameComponent extends Component {
     try {
       // Get network provider and web3 instance.
       const web3 = await getWeb3();
-
       // Use web3 to get the user's accounts.
       const accounts = await web3.eth.getAccounts();
 
       // Get the contract instance.
       const networkId = await web3.eth.net.getId();
+
+      //TODO: We need to display relevant UI to capture information to deploy contract
+
       const deployedNetwork = PrisonersDilemmaContract.networks[networkId];
 
       console.log(accounts, networkId, deployedNetwork);
-      // const instance = new web3.eth.Contract(
-      //   SimpleStorageContract.abi,
-      //   deployedNetwork && deployedNetwork.address,
-      // );
+
+      const instance = new web3.eth.Contract(
+        SimpleStorageContract.abi,
+        deployedNetwork && deployedNetwork.address,
+      );
 
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
