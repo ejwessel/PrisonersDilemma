@@ -25,8 +25,8 @@ class GameComponent extends Component {
       console.log(accounts, networkId, deployedNetwork);
 
       const instance = new web3.eth.Contract(
-        SimpleStorageContract.abi,
-        deployedNetwork && deployedNetwork.address,
+      //   SimpleStorageContract.abi,
+      //   deployedNetwork && deployedNetwork.address,
       );
 
       // Set web3, accounts, and contract to the state, and then proceed with an
