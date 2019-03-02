@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity ^0.5.0;
 
 /** @title Prisoners Dilemma **/
 contract PrisonersDilemma {
@@ -37,7 +37,7 @@ contract PrisonersDilemma {
       * @param _scoringData An array of scoring data that the game is going to follow 
       * [winning score, greedy score, mutual score, mutual greedy score]
       */
-    constructor(uint[] _player1, uint[] _player2, uint[] _scoringData) public {
+    constructor(uint[] memory _player1, uint[] memory _player2, uint[] memory _scoringData) public {
 
         address player1Addr = address(_player1[0]);
         address player2Addr = address(_player2[0]);
@@ -135,7 +135,7 @@ contract PrisonersDilemma {
             return;
         } else if(player1.score >= scoringData.winning_score && player2.score >= scoringData.winning_score) {
             //there is no winner, set the winner as the contract
-            winner = this;
+            winner = address(this);
         } else if (player1.score >= scoringData.winning_score) {
             winner = player1.addr;
         } else {
@@ -157,6 +157,6 @@ contract PrisonersDilemma {
 
     function endGame() public {
         emit ContractDeleted();
-        selfdestruct(0);
+        selfdestruct(address(0));
     }
 }
