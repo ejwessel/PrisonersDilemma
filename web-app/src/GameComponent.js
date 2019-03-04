@@ -9,22 +9,36 @@ import PrisonersDilemmaContract from './contracts/PrisonersDilemma.json';
 
 class GameComponent extends Component {
   componentDidMount = async () => {
-    try {
-      // Get network provider and web3 instance.
-      const web3 = await getWeb3();
-      // Get the contract instance.
+    // try {
+    // Get network provider and web3 instance.
+    const web3 = await getWeb3();
+    // Get the contract instance.
 
-      //TODO: We need to display relevant UI to capture information to deploy contract
-      const contract = web3.eth.contract(PrisonersDilemmaContract.abi);
-      var contractInstance = contract.new(
-        [[0, 0, 0], [0, 0, 0], [1, 2, 3, 4]],
-        { data: contract.bytecode, from: web3.eth.accounts[0], gas: 4000000 },
-        function(error, result) {
-          if(!result.address) {
-            console.log("transaction hash: " + result.transactionHash);
-          } else {
-            console.log(result.address);
-          }
+    //TODO: We need to display relevant UI to capture information to deploy contract
+    const contract = web3.eth.contract(PrisonersDilemmaContract.abi);
+    var contractInstance = contract.new(
+      [[0, 0, 0], [0, 0, 0], [1, 2, 3, 4]],
+      {
+        data: contract.bytecode,
+        from: web3.eth.accounts[0],
+        gas: 5000000
+      }, function (e, result) {
+        if(result){
+          var receipt = web3.eth.getTransactionReceipt(
+            result.transactionHash,
+            function(e, output) {
+              console.log(output);
+          });
+        }
+
+        // console.log("transaction hash: " + result.transactionHash);
+      });
+        // function(error, result) {
+        //   if(!result.address) {
+        //     console.log("transaction hash: " + result.transactionHash);
+        //   } else {
+        //     console.log(result.address);
+        //   }
 
           // if(!error) {
           //   // console.log(result.address);
@@ -33,9 +47,7 @@ class GameComponent extends Component {
           // } else {
           //   console.error(error);
           // }
-      });
-
-      console.log(contractInstance);
+      // });
 
       // console.log(contract.transactionHash);
       // console.log(contract.address);
@@ -70,13 +82,13 @@ class GameComponent extends Component {
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
       // this.setState({ web3, accounts, contract: instance }, this.runExample);
-    } catch (error) {
-      // Catch any errors for any of the above operations.
-      // alert(
-      //   `Failed to load web3, accounts, or contract. Check console for details.`,
-      // );
-      console.error(error);
-    }
+    // } catch (error) {
+    //   // Catch any errors for any of the above operations.
+    //   // alert(
+    //   //   `Failed to load web3, accounts, or contract. Check console for details.`,
+    //   // );
+    //   console.error(error);
+    // }
   };
 
   render() {
