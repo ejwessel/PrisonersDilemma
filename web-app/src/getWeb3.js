@@ -9,10 +9,14 @@ const getWeb3 = () =>
         const web3 = new Web3(window.ethereum);
         try {
           // Request account access if needed
-          await window.ethereum.enable();
+          const exposed_acct = await window.ethereum.enable();
+          console.log("Using MetaMask: " + window.ethereum.isMetaMask);
+          console.log("Web 3 Version: " + web3.version.api);  
           // Acccounts now exposed
+          console.log("Exposed Account: " + exposed_acct);
           resolve(web3);
         } catch (error) {
+          console.error("An Error occured: " + error);
           reject(error);
         }
       }
