@@ -6,11 +6,14 @@ import GameTurnsComponent from './GameTurnsComponents/GameTurnsComponent';
 import GameCreateComponent from './GameCreateComponents/GameCreateComponent';
 import getWeb3 from './getWeb3';
 
-
 class GameComponent extends Component {
-  state = {
-    web3: null
-  };
+  constructor(props){
+    super(props);
+    
+    this.state = {
+      web3: null
+    };
+  }
 
   componentDidMount = async () => {
     this.setState({web3: await getWeb3()});
