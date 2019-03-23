@@ -1,5 +1,5 @@
 import Web3 from "web3";
-import PrisonersDilemma from "../json/PrisonersDilemma.json";
+import PrisonersDilemma from "./contracts/PrisonersDilemma.json";
 const FALLBACK_WEB3_PROVIDER = process.env.REACT_APP_NETWORK || 'http://0.0.0.0:8545';
 
 const getWeb3 = () =>
