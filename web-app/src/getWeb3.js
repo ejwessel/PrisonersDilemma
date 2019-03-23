@@ -1,5 +1,4 @@
 import Web3 from "web3";
-import PrisonersDilemma from "./contracts/PrisonersDilemma.json";
 const FALLBACK_WEB3_PROVIDER = process.env.REACT_APP_NETWORK || 'http://0.0.0.0:8545';
 
 const getWeb3 = () =>
@@ -17,41 +16,6 @@ const getWeb3 = () =>
           // Acccounts now exposed
           resolve(web3);
 
-          //console.log(web3.accounts);
-          var accounts = await web3.eth.getAccounts();
-       
-
-          var contract_abi = PrisonersDilemma['abi'];
-          var contract = await new web3.eth.Contract(contract_abi);
-          console.log("contract instance: ");
-          console.log(contract);
-
-          var contract_byte_code = PrisonersDilemma['bytecode'];
-          var options = {
-              data : contract_byte_code, 
-              arguments : [
-                  [accounts[0], 0, 0],
-                  [accounts[0], 0, 0],
-                  [20, 5, 1, 0]
-              ]
-          };
-
-          var contract = await contract.deploy(options)
-          .send({
-            from: accounts[0],
-            gas: 15000,
-            gasPrice: '300000'
-        });
-
-        console.log(contract);
-        console.log("contract should ahve an address now!");
-        console.log(contract._address);
-
-        //  var signature = await web3.eth.personal.sign('testing', accounts[0], "");
-        //  console.log("signature: " + signature);
-
-        //  var account = await web3.eth.personal.ecRecover('testing', signature, "");
-        //  console.log(account);
         } catch (error) {
           reject(error);
         }

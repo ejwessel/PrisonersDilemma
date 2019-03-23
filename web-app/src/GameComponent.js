@@ -5,17 +5,25 @@ import GameScoreboardComponent from './GameScoreboardComponents/GameScoreboardCo
 import GameTurnsComponent from './GameTurnsComponents/GameTurnsComponent';
 import GameCreateComponent from './GameCreateComponents/GameCreateComponent';
 import getWeb3 from './getWeb3';
-import PrisonersDilemmaContract from './contracts/PrisonersDilemma.json';
+
 
 class GameComponent extends Component {
+  state = {
+    web3: null
+  };
+
+  componentDidMount = async () => {
+    this.setState({web3: await getWeb3()});
+  }
+
   render() {
     return (
       <div>
-        <GameCreateComponent />
-        <GameJoinComponent />
+        <GameCreateComponent web3={this.state.web3}/>
+        {/* <GameJoinComponent />
         <GameEventLogComponent />
         <GameScoreboardComponent />
-        <GameTurnsComponent />
+        <GameTurnsComponent />  */}
       </div>
     );
   }
