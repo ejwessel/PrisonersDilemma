@@ -3,29 +3,28 @@ import React, { Component } from 'react';
 class GameCreatePlayerComponent extends Component {
   constructor(props) {
     super(props);
-    this.state ={
-      address: null,
-      startScore: null
-    }
+
+    //event handlers
     this.handleAddress = this.handleAddress.bind(this);
-    this.handleStartScore = this.handleStartScore.bind(this);
+    this.handleChoice = this.handleChoice.bind(this);
+    this.handleScore = this.handleScore.bind(this);
   }
 
   handleAddress(event) {
-    
-    this.setState({address: event.target.value});
-    console.log(this.state.address);
+    this.props.setPlayerAddress(this.props.playerNum, event.target.value);
   }
 
-  handleStartScore(event) {
-    
-    this.setState({startScore: event.target.value});
-    console.log(this.state.startScore);
+  handleChoice(event) {
+    this.props.setPlayerChoice(this.props.playerNum, event.target.value);
+  }
+
+  handleScore(event) {
+    this.props.setPlayerScore(this.props.playerNum, event.target.value);
   }
 
   render() {
     return (
-      <fieldset name={`player${this.props.playerNum}`}>
+      <div>
         <label>Player #:</label>
         {' '}
         <input
@@ -35,7 +34,7 @@ class GameCreatePlayerComponent extends Component {
           onChange = { this.handleAddress }
         />
         {' '}
-        <select>
+        <select onChange = { this.handleChoice }>
           <option value = "No Choice">No Choice</option>
           <option value = "Share">Share</option>
           <option value = "Take">Take</option>
@@ -43,11 +42,11 @@ class GameCreatePlayerComponent extends Component {
         {' '}
         <input
           type = "text"
-          name = "startScore"
+          score = "startScore"
           placeholder = "Start Score"
-          onChange = { this.handleStartScore }
+          onChange = { this.handleScore }
         />
-      </fieldset>
+      </div>
     );
   }
 }
