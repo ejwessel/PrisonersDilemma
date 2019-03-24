@@ -18,30 +18,23 @@ class GameComponent extends Component {
       scoreData: {}
     };
 
-    //set player data
-    this.setPlayer1 = this.setPlayer1.bind(this);
-    this.setPlayer2 = this.setPlayer2.bind(this);
     this.deployContract = this.deployContract.bind(this);
-  }
-
-  setPlayer1(playerAddress, choice, score) {
-    this.setState({player1: {playerAddress, choice, score}});
-  }
-
-  setPlayer2(playerAddress, choice, score) {
-    this.setState({player2: {playerAddress, choice, score}});
   }
 
   componentDidMount = async () => {
     this.setState({web3: await getWeb3()});
   }
 
-  async deployContract() {
+  async deployContract(player1, player2, scoreData) {
+
+    await this.setState({player1, player2, scoreData});
+    console.log(this.state);
+
     //save data in parent, deploy contract
-    const {web3} = this.props;
+    const {web3} = this.state;
     var accounts = await web3.eth.getAccounts();
     var contract_abi = PrisonersDilemma['abi'];
-    var contract = await new this.props.web3.eth.Contract(contract_abi);
+    var contract = await new web3.eth.Contract(contract_abi);
     console.log("contract instance: ");
     console.log(contract);
 
@@ -49,9 +42,9 @@ class GameComponent extends Component {
     var options = {
         data : contract_byte_code,
         arguments : [
-            [accounts[0], 0, 0],
-            [accounts[0], 0, 0],
-            [20, 5, 1, 0]
+            [this.state.player1.address, this.state.player1.choice, this.state.player1.score],
+            [this.state.player2.address, this.state.player2.choice, this.state.player2.score],
+            [this.state.scoreData.winScore, this.state.scoreData.mutualScore, this.state.scoreData.greedScore, this.state.scoreData.mutualGreedScore]
         ]
     };
 
@@ -71,8 +64,6 @@ class GameComponent extends Component {
     return (
       <div>
         <GameCreateComponent 
-          setPlayer1={this.setPlayer1} 
-          setPlayer2={this.setPlayer2} 
           deployContract={this.deployContract}
         />
           

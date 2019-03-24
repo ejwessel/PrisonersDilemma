@@ -22,6 +22,9 @@ class GameCreateComponent extends Component {
     this.handleGreedScore = this.handleGreedScore.bind(this);
     this.handleMutualScore = this.handleMutualScore.bind(this);
     this.handleMutualGreedScore = this.handleMutualGreedScore.bind(this);
+
+    //submi
+    this.handleOnSubmit = this.handleOnSubmit.bind(this);
   }
 
   handlePlayerAddress(playerId, address) {
@@ -64,13 +67,17 @@ class GameCreateComponent extends Component {
     this.setState({
       scoreData: { ...this.state['scoreData'], mutualGreedScore: event.target.value }
     });
-
-    console.log(this.state);
   }
+
+  handleOnSubmit(event) {
+    event.preventDefault(); //prevent refresh
+    this.props.deployContract(this.state.player1, this.state.player2, this.state.scoreData);
+  }
+
   render() {
     return (
       <div>
-        <form>
+        <form onSubmit = { this.handleOnSubmit }>
           <GameCreatePlayerComponent playerNum = { 1 } 
             setPlayerAddress = { this.handlePlayerAddress }
             setPlayerChoice = { this.handlePlayerChoice }
