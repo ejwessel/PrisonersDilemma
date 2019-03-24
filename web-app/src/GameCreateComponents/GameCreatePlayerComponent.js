@@ -3,24 +3,36 @@ import React, { Component } from 'react';
 class GameCreatePlayerComponent extends Component {
   constructor(props) {
     super(props);
-
-    this.handleChange = this.handleChange.bind(this);
+    this.state ={
+      address: null,
+      startScore: null
+    }
+    this.handleAddress = this.handleAddress.bind(this);
+    this.handleStartScore = this.handleStartScore.bind(this);
   }
 
-  handleChange(event) {
-    console.log("doesn't do anything yet")
+  handleAddress(event) {
+    
+    this.setState({address: event.target.value});
+    console.log(this.state.address);
+  }
+
+  handleStartScore(event) {
+    
+    this.setState({startScore: event.target.value});
+    console.log(this.state.startScore);
   }
 
   render() {
     return (
-      <div>
+      <fieldset name={`player${this.props.playerNum}`}>
         <label>Player #:</label>
         {' '}
         <input
           type = "text"
-          win_score = ""
-          value = "Address"
-          onChange = { this.handleChange }
+          name = "address"
+          placeholder = "address"
+          onChange = { this.handleAddress }
         />
         {' '}
         <select>
@@ -31,11 +43,11 @@ class GameCreatePlayerComponent extends Component {
         {' '}
         <input
           type = "text"
-          start_score = ""
-          value = "Start Score"
-          onChange = { this.handleChange }
+          name = "startScore"
+          placeholder = "Start Score"
+          onChange = { this.handleStartScore }
         />
-      </div>
+      </fieldset>
     );
   }
 }

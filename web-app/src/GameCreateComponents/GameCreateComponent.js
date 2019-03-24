@@ -44,10 +44,12 @@ class GameCreateComponent extends Component {
   render() {
     return (
       <div>
-        <GameCreatePlayerComponent />
-        <GameCreatePlayerComponent />
-        <GameCreateScoringComponent />
-        <button onClick={this.deployContract}>Start Game</button>
+        <form >
+          <GameCreatePlayerComponent playerNum={1} />
+          <GameCreatePlayerComponent playerNum={2} />
+          <GameCreateScoringComponent />
+          <button onClick={this.deployContract}>Start Game</button>
+        </form>
       </div>
     );
   }

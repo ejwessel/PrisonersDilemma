@@ -11,18 +11,40 @@ class GameComponent extends Component {
     super(props);
     
     this.state = {
-      web3: null
+      web3: null,
+      player1: {},
+      player2: {},
+      scoreData: {}
     };
+
+
+    this.setPlayer1 = this.setPlayer1.bind(this);
+    this.setPlayer2 = this.setPlayer2.bind(this);
+
+  }
+
+  setPlayer1(playerAddress, choice, score) {
+    this.setState({player1: {playerAddress, choice, score}});
+  }
+
+  setPlayer2(playerAddress, choice, score) {
+    this.setState({player2: {playerAddress, choice, score}});
   }
 
   componentDidMount = async () => {
     this.setState({web3: await getWeb3()});
   }
 
+
+
   render() {
     return (
       <div>
-        <GameCreateComponent web3={this.state.web3}/>
+        <GameCreateComponent 
+          setPlayer1={this.setPlayer1} 
+          setPlayer2={this.setPlayer2} 
+          web3={this.state.web3}/>
+          
         {/* <GameJoinComponent />
         <GameEventLogComponent />
         <GameScoreboardComponent />
