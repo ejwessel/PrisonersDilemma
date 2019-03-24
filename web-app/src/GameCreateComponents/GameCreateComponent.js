@@ -12,57 +12,80 @@ class GameCreateComponent extends Component {
       scoreData: null
     };
 
-    this.handleAddress = this.handleAddress.bind(this);
-    this.handleChoice = this.handleChoice.bind(this);
-    this.handleScore = this.handleScore.bind(this);
+    //handle player 
+    this.handlePlayerAddress = this.handlePlayerAddress.bind(this);
+    this.handlePlayerChoice = this.handlePlayerChoice.bind(this);
+    this.handlePlayerScore = this.handlePlayerScore.bind(this);
+
+    //handle scoring
+    this.handleWinScore = this.handleWinScore.bind(this);
+    this.handleGreedScore = this.handleGreedScore.bind(this);
+    this.handleMutualScore = this.handleMutualScore.bind(this);
+    this.handleMutualGreedScore = this.handleMutualGreedScore.bind(this);
   }
 
-  handleAddress(playerId, address) {
-    //save local state
-    console.log(address)
+  handlePlayerAddress(playerId, address) {
     this.setState({
-      ['player' + playerId]: { address: address}
+      ['player' + playerId]: { ...this.state['player' + playerId], address: address }
     });
   }
 
-  handleChoice(playerId, choice) {
-    //save local state
-    console.log(choice)
+  handlePlayerChoice(playerId, choice) {
     this.setState({
-      ['player' + playerId]: { choice: choice }
+      ['player' + playerId]: { ...this.state['player' + playerId], choice: choice }
     });
   }
 
-  handleScore(playerId, score) {
-    //save local state
-    console.log(score)
+ handlePlayerScore(playerId, score) {
     this.setState({
-      ['player' + playerId]: { score: score }
+      ['player' + playerId]: { ...this.state['player' + playerId], score: score }
     });
   }
 
-  handleScoreData(scoreData) {
+  handleWinScore(event) {
     this.setState({
-      scoreData: scoreData
+      scoreData: { ...this.state['scoreData'], winScore: event.target.value }
     });
   }
 
+  handleGreedScore(event) {
+    this.setState({
+      scoreData: { ...this.state['scoreData'], greedScore: event.target.value }
+    });
+  }
+
+  handleMutualScore(event) {
+    this.setState({
+      scoreData: { ...this.state['scoreData'],  mutualScore: event.target.value }
+    });
+  }
+
+  handleMutualGreedScore(event) {
+    this.setState({
+      scoreData: { ...this.state['scoreData'], mutualGreedScore: event.target.value }
+    });
+
+    console.log(this.state);
+  }
   render() {
     return (
       <div>
         <form>
           <GameCreatePlayerComponent playerNum = { 1 } 
-            setPlayerAddress = { this.handleAddress }
-            setPlayerChoice = { this.handleChoice }
-            setPlayerScore = { this.handleScore }
+            setPlayerAddress = { this.handlePlayerAddress }
+            setPlayerChoice = { this.handlePlayerChoice }
+            setPlayerScore = { this.handlePlayerScore }
           />
           <GameCreatePlayerComponent playerNum = { 2 } 
-            setPlayerAddress = { this.handleAddress }
-            setPlayerChoice = { this.handleChoice }
-            setPlayerScore = { this.handleScore }
+            setPlayerAddress = { this.handlePlayerAddress }
+            setPlayerChoice = { this.handlePlayerChoice }
+            setPlayerScore = { this.handlePlayerScore }
           />
           <GameCreateScoringComponent 
-            setScoreData = { this.handleScoreData }
+            setWinScore = { this.handleWinScore }
+            setGreedPoints = { this.handleGreedScore }
+            setMutualPoints = { this.handleMutualScore }
+            setMutualGreedPoints = { this.handleMutualGreedScore }
           />
           <button type="submit">Start Game</button>
         </form>

@@ -21,6 +21,7 @@ class GameComponent extends Component {
     //set player data
     this.setPlayer1 = this.setPlayer1.bind(this);
     this.setPlayer2 = this.setPlayer2.bind(this);
+    this.deployContract = this.deployContract.bind(this);
   }
 
   setPlayer1(playerAddress, choice, score) {
@@ -72,7 +73,7 @@ class GameComponent extends Component {
         <GameCreateComponent 
           setPlayer1={this.setPlayer1} 
           setPlayer2={this.setPlayer2} 
-          web3={this.state.web3}
+          deployContract={this.deployContract}
         />
           
         {/* <GameJoinComponent />
