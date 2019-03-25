@@ -7,8 +7,8 @@ class GameCreateComponent extends Component {
     super(props);
 
     this.state = {
-      player1 : null,
-      player2: null,
+      player1 : { address: null, choice: 0, score: 0 },
+      player2: { address: null, choice: 0, score: 0 },
       scoreData: null
     };
 

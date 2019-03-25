@@ -35,9 +35,9 @@ class GameCreatePlayerComponent extends Component {
         />
         {' '}
         <select onChange = { this.handleChoice }>
-          <option value = "No Choice">No Choice</option>
-          <option value = "Share">Share</option>
-          <option value = "Take">Take</option>
+          <option value = "0">No Choice</option>
+          <option value = "1">Share</option>
+          <option value = "2">Take</option>
         </select>
         {' '}
         <input
