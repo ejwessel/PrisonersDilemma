@@ -42,9 +42,12 @@ class GameComponent extends Component {
     var options = {
         data : contract_byte_code,
         arguments : [
-            [parseInt(this.state.player1.address), parseInt(this.state.player1.choice), parseInt(this.state.player1.score)],
-            [parseInt(this.state.player2.address), parseInt(this.state.player2.choice), parseInt(this.state.player2.score)],
-            [parseInt(this.state.scoreData.winScore), parseInt(this.state.scoreData.mutualScore), parseInt(this.state.scoreData.greedScore), parseInt(this.state.scoreData.mutualGreedScore)]
+              [accounts[0], 0, 0],
+              [accounts[0], 0, 0],
+              [20, 5, 1, 0]
+//            [this.state.player1.address, Number(this.state.player1.choice), Number(this.state.player1.score)],
+//            [this.state.player2.address, Number(this.state.player2.choice), Number(this.state.player2.score)],
+//            [Number(this.state.scoreData.winScore), Number(this.state.scoreData.mutualScore), Number(this.state.scoreData.greedScore), Number(this.state.scoreData.mutualGreedScore)]
         ]
     };
 
@@ -53,8 +56,8 @@ class GameComponent extends Component {
     var contract = await contract.deploy(options)
     .send({
       from: accounts[0],
-      gas: 15000,
-      gasPrice: '300000'
+      gas: 1500000,
+      gasPrice: '15000000'
     });
 
     console.log(contract);
