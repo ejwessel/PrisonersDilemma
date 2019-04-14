@@ -4,13 +4,6 @@ class GameCreateScoringComponent extends Component {
 
   constructor(props){
     super(props);
-    this.handleChange = this.handleChange.bind(this)
-  }
-
-  handleChange(event) {
-    console.log("does nothing yet");
-    event.preventDefault();
-    //TODO: move the state upwards
   }
 
   render() {
@@ -20,30 +13,26 @@ class GameCreateScoringComponent extends Component {
         {' '}
         <input
           type = "text"
-          win_score = ""
-          value = "Win Score"
-          onChange = { this.handleChange }
+          placeholder = "Win Score"
+          onChange = { this.props.setWinScore }
         />
         {' '}
         <input
           type = "text"
-          greed_points = ""
-          value = "Greed Points"
-          onChange = { this.handleChange }
+          placeholder = "Greed Points"
+          onChange = { this.props.setGreedPoints }
         />
         {' '}
         <input
           type = "text"
-          mutual_points = ""
-          value = "Mutual Points"
-          onChange = { this.handleChange }
+          placeholder = "Mutual Points"
+          onChange = { this.props.setMutualPoints }
         />
         {' '}
         <input
           type = "text"
-          mutual_greed_points = ""
-          value = "Mutual Greed Points"
-          onChange = { this.handleChange }
+          placeholder = "Mutual Greed Points"
+          onChange = { this.props.setMutualGreedPoints }
         />
       </div>
     );

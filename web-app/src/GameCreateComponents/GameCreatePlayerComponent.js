@@ -4,11 +4,22 @@ class GameCreatePlayerComponent extends Component {
   constructor(props) {
     super(props);
 
-    this.handleChange = this.handleChange.bind(this);
+    //event handlers
+    this.handleAddress = this.handleAddress.bind(this);
+    this.handleChoice = this.handleChoice.bind(this);
+    this.handleScore = this.handleScore.bind(this);
   }
 
-  handleChange(event) {
-    console.log("doesn't do anything yet")
+  handleAddress(event) {
+    this.props.setPlayerAddress(this.props.playerNum, event.target.value);
+  }
+
+  handleChoice(event) {
+    this.props.setPlayerChoice(this.props.playerNum, event.target.value);
+  }
+
+  handleScore(event) {
+    this.props.setPlayerScore(this.props.playerNum, event.target.value);
   }
 
   render() {
@@ -18,22 +29,22 @@ class GameCreatePlayerComponent extends Component {
         {' '}
         <input
           type = "text"
-          win_score = ""
-          value = "Address"
-          onChange = { this.handleChange }
+          name = "address"
+          placeholder = "address"
+          onChange = { this.handleAddress }
         />
         {' '}
-        <select>
-          <option value = "No Choice">No Choice</option>
-          <option value = "Share">Share</option>
-          <option value = "Take">Take</option>
+        <select onChange = { this.handleChoice }>
+          <option value = "0">No Choice</option>
+          <option value = "1">Share</option>
+          <option value = "2">Take</option>
         </select>
         {' '}
         <input
           type = "text"
-          start_score = ""
-          value = "Start Score"
-          onChange = { this.handleChange }
+          score = "startScore"
+          placeholder = "Start Score"
+          onChange = { this.handleScore }
         />
       </div>
     );
