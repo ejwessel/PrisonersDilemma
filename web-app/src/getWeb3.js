@@ -17,43 +17,6 @@ const getWeb3 = () =>
           // Acccounts now exposed
           resolve(web3);
 
-          //console.log(web3.accounts);
-          var accounts = await web3.eth.getAccounts();
-
-          //this sets up the contract instance
-          var contract_abi = PrisonersDilemma['abi'];
-          var contract = await new web3.eth.Contract(contract_abi, null, { transactionConfirmationBlocks: 1 });
-          console.log("contract data: ");
-          console.log(contract);
-
-          var contract_bytecode = PrisonersDilemma['bytecode'];
-          var options = {
-              data : contract_bytecode,
-              arguments : [
-                  [accounts[0], 0, 0],
-                  [accounts[0], 0, 0],
-                  [20, 5, 1, 0]
-              ]
-          };
-
-          console.log("before deploy");
-
-          //contract is deployed after the transaction is confirmed
-          //contract address should be visible now
-          var contract = await contract.deploy(options).send(
-              {
-                  from: accounts[0],
-                  gas: 3500000,
-                  gasPrice: '15000000'
-              }
-          );
-          console.log("after deploy");
-
-          console.log(contract);
-          console.log("contract should have an address now!");
-          console.log(contract.address);
-
-
         } catch (error) {
           reject(error);
         }

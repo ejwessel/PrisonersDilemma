@@ -34,7 +34,12 @@ class GameComponent extends Component {
     const {web3} = this.state;
     var accounts = await web3.eth.getAccounts();
     var contract_abi = PrisonersDilemma['abi'];
-    var contract = await new web3.eth.Contract(contract_abi, null, {transactionConfirmationBlocks:1});
+    var contract = await new web3.eth.Contract(
+      contract_abi,
+      null,
+      { transactionConfirmationBlocks:1, transactionPollingTimeout: 3 }
+    );
+
     console.log("contract instance: ");
     console.log(contract);
 
@@ -62,7 +67,7 @@ class GameComponent extends Component {
 
     console.log(contract);
     console.log("contract should have an address now!");
-    console.log(contract._address);
+    console.log(contract.address);
   }
 
   render() {
