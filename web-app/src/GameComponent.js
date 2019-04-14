@@ -34,7 +34,7 @@ class GameComponent extends Component {
     const {web3} = this.state;
     var accounts = await web3.eth.getAccounts();
     var contract_abi = PrisonersDilemma['abi'];
-    var contract = await new web3.eth.Contract(contract_abi);
+    var contract = await new web3.eth.Contract(contract_abi, null, {transactionConfirmationBlocks:1});
     console.log("contract instance: ");
     console.log(contract);
 
@@ -56,7 +56,7 @@ class GameComponent extends Component {
     var contract = await contract.deploy(options)
     .send({
       from: accounts[0],
-      gas: 1500000,
+      gas: 3500000,
       gasPrice: '15000000'
     });
 

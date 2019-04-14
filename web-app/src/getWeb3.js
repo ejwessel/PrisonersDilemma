@@ -1,4 +1,5 @@
 import Web3 from "web3";
+import PrisonersDilemma from "./contracts/PrisonersDilemma.json";
 const FALLBACK_WEB3_PROVIDER = process.env.REACT_APP_NETWORK || 'http://0.0.0.0:8545';
 
 const getWeb3 = () =>
@@ -12,15 +13,51 @@ const getWeb3 = () =>
         try {
           // Request account access if needed
           var enable_output = await window.ethereum.enable();
-          console.log(enable_output);
+          //console.log(enable_output); //should be a contract address
           // Acccounts now exposed
           resolve(web3);
+
+          //console.log(web3.accounts);
+          var accounts = await web3.eth.getAccounts();
+
+          //this sets up the contract instance
+          var contract_abi = PrisonersDilemma['abi'];
+          var contract = await new web3.eth.Contract(contract_abi, null, { transactionConfirmationBlocks: 1 });
+          console.log("contract data: ");
+          console.log(contract);
+
+          var contract_bytecode = PrisonersDilemma['bytecode'];
+          var options = {
+              data : contract_bytecode,
+              arguments : [
+                  [accounts[0], 0, 0],
+                  [accounts[0], 0, 0],
+                  [20, 5, 1, 0]
+              ]
+          };
+
+          console.log("before deploy");
+
+          //contract is deployed after the transaction is confirmed
+          //contract address should be visible now
+          var contract = await contract.deploy(options).send(
+              {
+                  from: accounts[0],
+                  gas: 3500000,
+                  gasPrice: '15000000'
+              }
+          );
+          console.log("after deploy");
+
+          console.log(contract);
+          console.log("contract should have an address now!");
+          console.log(contract.address);
+
 
         } catch (error) {
           reject(error);
         }
-      }
-      // Legacy dapp browsers...
+      }// Legacy dapp browsers...
       else if (window.web3) {
         console.log("window.web3");
         // Use Mist/MetaMask's provider.
