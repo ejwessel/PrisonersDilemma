@@ -40,7 +40,7 @@ class GameComponent extends Component {
       contract_abi,
       null,
       { transactionConfirmationBlocks:1, transactionPollingTimeout: 3 }
-    );
+   );
 
     console.log("contract instance: ");
     console.log(contract);
@@ -86,35 +86,45 @@ class GameComponent extends Component {
     //call contarct with current account
     //check that contract has address first before continuing
     var accounts = await this.state.web3.eth.getAccounts();
-    
-    this.state.PrisonersContract.once(
-      "PlayerSelectedChoice",
-      null,
-      (error, event) => { console.log("EVENT: " + event.event); }
-    );
+   
+    if(this.state.PrisonersContract != null) {
+      this.state.PrisonersContract.once(
+        "PlayerSelectedChoice",
+        null,
+        (error, event) => { console.log("EVENT: " + event.event); }
+      );
 
-    var transaction = await this.state.PrisonersContract.methods
-      .playerChoose(1).send({
-        from: accounts[0]
-      });
-    console.log(transaction);
+      var transaction = await this.state.PrisonersContract.methods
+        .playerChoose(1).send({
+          from: accounts[0]
+        });
+      console.log(transaction);
+    } else {
+      console.log("Contract has not been deployed");
+    }
   }
 
   render() {
-    return (
-      <div>
-        <GameCreateComponent 
-          deployContract={this.deployContract}
-        />
 
-        <button type="button" onClick={this.submitChoice}>Submit Choice</button>
-          
-        {/* <GameJoinComponent />
-        <GameEventLogComponent />
-        <GameScoreboardComponent />
-        <GameTurnsComponent />  */}
-      </div>
-    );
+    if (this.state.PrisonersContract == null) {
+      return (
+        <div>
+          <GameCreateComponent deployContract={this.deployContract} />
+        </div>
+      );
+    } else {
+      return(
+        <div>
+            <button type="button" onClick={this.submitChoice}>Submit Choice</button>
+            {
+              /* <GameJoinComponent />
+               * <GameEventLogComponent />
+               * <GameScoreboardComponent />
+              * <GameTurnsComponent />  */
+            }
+        </div>
+      )
+    }
   }
 }
 
