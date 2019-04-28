@@ -15,27 +15,29 @@ class GameTurnsPlayerChoiceComponent extends Component {
 
   render() {
     return (
-      <form onSubmit={ this.handleSubmit }>
-        <label>Player # Turn</label>
-        {' '}
-        <input
-          type = "text"
-          contract_address = ""
-          value = "address"
-          readOnly
-        />
-        {' '}
-        <select>
-          <option value = "No Choice">No Choice</option>
-          <option value = "Share">Share</option>
-          <option value = "Take">Take</option>
-        </select>
-        {' '}
-        <input
-          type = "submit"
-          value = "Select Choice"
-        />
-      </form>
+      <div> 
+        <form onSubmit={ this.handleSubmit }>
+          <label>Player # Turn</label>
+          {' '}
+          <input
+            type = "text"
+            contract_address = ""
+            value = "address"
+            readOnly
+          />
+          {' '}
+          <select>
+            <option value = "No Choice">No Choice</option>
+            <option value = "Share">Share</option>
+            <option value = "Take">Take</option>
+          </select>
+          {' '}
+          <input
+            type = "submit"
+            value = "Select Choice"
+          />
+        </form>
+      </div>
     );
   }
 }
