@@ -105,23 +105,26 @@ class GameComponent extends Component {
   }
 
   render() {
-
     if (this.state.PrisonersContract == null) {
       return (
         <div>
-          <GameCreateComponent deployContract={this.deployContract} />
+          <GameCreateComponent deployContract={ this.deployContract } />
         </div>
+        /* <GameJoinComponent /> */
       );
     } else {
       return(
         <div>
-            <button type="button" onClick={this.submitChoice}>Submit Choice</button>
-            {
-              /* <GameJoinComponent />
-               * <GameEventLogComponent />
-               * <GameScoreboardComponent />
-              * <GameTurnsComponent />  */
-            }
+          <GameTurnsComponent
+            web3={ this.state.web3 }
+            contract={ this.state.PrisonersContract }
+          />
+
+          {
+            //<button type="button" onClick={this.submitChoice}>Submit Choice</button>
+            //<GameEventLogComponent />
+            //<GameScoreboardComponent />
+          }
         </div>
       )
     }
