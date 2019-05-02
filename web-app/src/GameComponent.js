@@ -60,13 +60,13 @@ class GameComponent extends Component {
 
     console.log(options);
 
+
     //print log that the contract was initialized
     contract.once(
       "ContractInitialized",
       null,
       (error, event) => { console.log("EVENT: " + event.event); }
     );
-
     var contract = await contract.deploy(options)
     .send({
       from: accounts[0],
@@ -77,8 +77,24 @@ class GameComponent extends Component {
     console.log(contract);
     console.log("contract should have an address now!");
     console.log(contract.address);
+
     this.setState(
       { PrisonersContract: contract }
+
+  }
+
+  render() {
+    return (
+      <div>
+        <GameCreateComponent 
+          deployContract={this.deployContract}
+        />
+          
+        {/* <GameJoinComponent />
+        <GameEventLogComponent />
+        <GameScoreboardComponent />
+        <GameTurnsComponent />  */}
+      </div>
     );
   }
 
