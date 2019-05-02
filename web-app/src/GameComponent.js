@@ -15,10 +15,12 @@ class GameComponent extends Component {
       web3: null,
       player1: {},
       player2: {},
-      scoreData: {}
+      scoreData: {},
+      PrisonersContract: null
     };
 
     this.deployContract = this.deployContract.bind(this);
+    this.submitChoice = this.submitChoice.bind(this);
   }
 
   componentDidMount = async () => {
@@ -38,7 +40,7 @@ class GameComponent extends Component {
       contract_abi,
       null,
       { transactionConfirmationBlocks:1, transactionPollingTimeout: 3 }
-    );
+   );
 
     console.log("contract instance: ");
     console.log(contract);
@@ -58,6 +60,13 @@ class GameComponent extends Component {
 
     console.log(options);
 
+
+    //print log that the contract was initialized
+    contract.once(
+      "ContractInitialized",
+      null,
+      (error, event) => { console.log("EVENT: " + event.event); }
+    );
     var contract = await contract.deploy(options)
     .send({
       from: accounts[0],
@@ -68,6 +77,10 @@ class GameComponent extends Component {
     console.log(contract);
     console.log("contract should have an address now!");
     console.log(contract.address);
+
+    this.setState(
+      { PrisonersContract: contract }
+
   }
 
   render() {
@@ -83,6 +96,54 @@ class GameComponent extends Component {
         <GameTurnsComponent />  */}
       </div>
     );
+  }
+
+  async submitChoice() {
+    //call contarct with current account
+    //check that contract has address first before continuing
+    var accounts = await this.state.web3.eth.getAccounts();
+   
+    if(this.state.PrisonersContract != null) {
+      this.state.PrisonersContract.once(
+        "PlayerSelectedChoice",
+        null,
+        (error, event) => { console.log("EVENT: " + event.event); }
+      );
+
+      var transaction = await this.state.PrisonersContract.methods
+        .playerChoose(1).send({
+          from: accounts[0]
+        });
+      console.log(transaction);
+    } else {
+      console.log("Contract has not been deployed");
+    }
+  }
+
+  render() {
+    if (this.state.PrisonersContract == null) {
+      return (
+        <div>
+          <GameCreateComponent deployContract={ this.deployContract } />
+        </div>
+        /* <GameJoinComponent /> */
+      );
+    } else {
+      return(
+        <div>
+          <GameTurnsComponent
+            web3={ this.state.web3 }
+            contract={ this.state.PrisonersContract }
+          />
+
+          {
+            //<button type="button" onClick={this.submitChoice}>Submit Choice</button>
+            //<GameEventLogComponent />
+            //<GameScoreboardComponent />
+          }
+        </div>
+      )
+    }
   }
 }
 
