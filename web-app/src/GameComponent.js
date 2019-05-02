@@ -78,8 +78,7 @@ class GameComponent extends Component {
     console.log("contract should have an address now!");
     console.log(contract.address);
 
-    this.setState(
-      { PrisonersContract: contract }
+    this.setState({ PrisonersContract: contract })
 
   }
 
