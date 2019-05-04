@@ -7,7 +7,7 @@ import GameCreateComponent from './GameCreateComponents/GameCreateComponent';
 import PrisonersDilemma from "./contracts/PrisonersDilemma.json";
 import getWeb3 from './getWeb3';
 
-class GameComponent extends Component {
+class Game extends Component {
   constructor(props){
     super(props);
     
@@ -23,6 +23,7 @@ class GameComponent extends Component {
     this.submitChoice = this.submitChoice.bind(this);
   }
 
+  // grab web3 on document load
   componentDidMount = async () => {
     this.setState({web3: await getWeb3()});
   }
@@ -36,14 +37,14 @@ class GameComponent extends Component {
     const {web3} = this.state;
     var accounts = await web3.eth.getAccounts();
     var contract_abi = PrisonersDilemma['abi'];
-    var contract = await new web3.eth.Contract(
+    var contractPreDeployment = await new web3.eth.Contract(
       contract_abi,
       null,
       { transactionConfirmationBlocks:1, transactionPollingTimeout: 3 }
    );
 
     console.log("contract instance: ");
-    console.log(contract);
+    console.log(contractPreDeployment);
 
     var contract_byte_code = PrisonersDilemma['bytecode'];
     var options = {
@@ -60,50 +61,36 @@ class GameComponent extends Component {
 
     console.log(options);
 
-
     //print log that the contract was initialized
-    contract.once(
+    contractPreDeployment.once(
       "ContractInitialized",
       null,
       (error, event) => { console.log("EVENT: " + event.event); }
     );
-    var contract = await contract.deploy(options)
-    .send({
-      from: accounts[0],
-      gas: 3500000,
-      gasPrice: '15000000'
-    });
 
-    console.log(contract);
+
+    var contractPostDeployment = await contractPreDeployment.deploy(options)
+      .send({
+        from: accounts[0],
+        gas: 3500000,
+        gasPrice: '15000000'
+      });
+      
+    console.log(contractPostDeployment);
     console.log("contract should have an address now!");
-    console.log(contract.address);
+    console.log(contractPostDeployment.address);
 
-    this.setState({ PrisonersContract: contract })
+    this.setState({ PrisonersContract: contractPostDeployment })
 
-  }
-
-  render() {
-    return (
-      <div>
-        <GameCreateComponent 
-          deployContract={this.deployContract}
-        />
-          
-        {/* <GameJoinComponent />
-        <GameEventLogComponent />
-        <GameScoreboardComponent />
-        <GameTurnsComponent />  */}
-      </div>
-    );
   }
 
   async submitChoice() {
-    //call contarct with current account
+    //call contract with current account
     //check that contract has address first before continuing
     var accounts = await this.state.web3.eth.getAccounts();
    
-    if(this.state.PrisonersContract != null) {
-      this.state.PrisonersContract.once(
+    if (this.state.PrisonersContract) {
+      this.state.PrisonersContract.once (
         "PlayerSelectedChoice",
         null,
         (error, event) => { console.log("EVENT: " + event.event); }
@@ -146,4 +133,4 @@ class GameComponent extends Component {
   }
 }
 
-export default GameComponent;
+export default Game;
