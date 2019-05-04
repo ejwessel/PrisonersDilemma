@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import GameJoinComponent from './GameJoinComponents/GameJoinComponent';
-import GameEventLogComponent from './GameEventLogComponents/GameEventLogComponent';
-import GameScoreboardComponent from './GameScoreboardComponents/GameScoreboardComponent';
-import GameTurnsComponent from './GameTurnsComponents/GameTurnsComponent';
-import GameCreateComponent from './CreateComponents/GameCreateComponent';
+import JoinComponent from './JoinComponents/JoinComponent';
+import EventLogComponent from './EventLogComponents/EventLogComponent';
+import ScoreboardComponent from './ScoreboardComponents/ScoreboardComponent';
+import TurnsComponent from './TurnsComponents/TurnsComponent';
+import CreateComponent from './CreateComponents/CreateComponent';
 import PrisonersDilemma from "./contracts/PrisonersDilemma.json";
 import getWeb3 from './getWeb3';
 
@@ -108,22 +108,22 @@ class Game extends Component {
     if (this.state.PrisonersContract == null) {
       return (
         <div>
-          <GameCreateComponent deployContract={ this.deployContract } />
+          <CreateComponent deployContract={ this.deployContract } />
         </div>
-        /* <GameJoinComponent /> */
+        /* <JoinComponent /> */
       );
     } else {
       return(
         <div>
-          <GameTurnsComponent
+          <TurnsComponent
             web3={ this.state.web3 }
             contract={ this.state.PrisonersContract }
           />
 
           {
             //<button type="button" onClick={this.submitChoice}>Submit Choice</button>
-            //<GameEventLogComponent />
-            //<GameScoreboardComponent />
+            //<EventLogComponent />
+            //<ScoreboardComponent />
           }
         </div>
       )
