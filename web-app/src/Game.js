@@ -3,7 +3,7 @@ import GameJoinComponent from './GameJoinComponents/GameJoinComponent';
 import GameEventLogComponent from './GameEventLogComponents/GameEventLogComponent';
 import GameScoreboardComponent from './GameScoreboardComponents/GameScoreboardComponent';
 import GameTurnsComponent from './GameTurnsComponents/GameTurnsComponent';
-import GameCreateComponent from './GameCreateComponents/GameCreateComponent';
+import GameCreateComponent from './CreateComponents/GameCreateComponent';
 import PrisonersDilemma from "./contracts/PrisonersDilemma.json";
 import getWeb3 from './getWeb3';
 
