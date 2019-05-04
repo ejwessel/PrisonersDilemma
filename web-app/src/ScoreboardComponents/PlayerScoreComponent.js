@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class GameScoreboardPlayerScoreComponent extends Component {
+class PlayerScoreComponent extends Component {
   render() {
     return (
       <form>
@@ -24,4 +24,4 @@ class GameScoreboardPlayerScoreComponent extends Component {
   }
 }
 
-export default GameScoreboardPlayerScoreComponent;
+export default PlayerScoreComponent;
