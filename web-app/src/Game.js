@@ -7,7 +7,7 @@ import GameCreateComponent from './GameCreateComponents/GameCreateComponent';
 import PrisonersDilemma from "./contracts/PrisonersDilemma.json";
 import getWeb3 from './getWeb3';
 
-class GameComponent extends Component {
+class Game extends Component {
   constructor(props){
     super(props);
     
@@ -82,21 +82,6 @@ class GameComponent extends Component {
 
   }
 
-  render() {
-    return (
-      <div>
-        <GameCreateComponent 
-          deployContract={this.deployContract}
-        />
-          
-        {/* <GameJoinComponent />
-        <GameEventLogComponent />
-        <GameScoreboardComponent />
-        <GameTurnsComponent />  */}
-      </div>
-    );
-  }
-
   async submitChoice() {
     //call contarct with current account
     //check that contract has address first before continuing
@@ -146,4 +131,4 @@ class GameComponent extends Component {
   }
 }
 
-export default GameComponent;
+export default Game;
