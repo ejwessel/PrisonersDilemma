@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import JoinComponent from './JoinComponents/JoinComponent';
 import EventLogComponent from './EventLogComponents/EventLogComponent';
 import ScoreboardComponent from './ScoreboardComponents/ScoreboardComponent';
-import TurnsComponent from './TurnsComponents/TurnsComponent';
+import TurnComponent from './TurnComponents/TurnComponent';
 import CreateComponent from './CreateComponents/CreateComponent';
 import PrisonersDilemma from "./contracts/PrisonersDilemma.json";
 import getWeb3 from './getWeb3';
@@ -115,7 +115,7 @@ class Game extends Component {
     } else {
       return(
         <div>
-          <TurnsComponent
+          <TurnComponent
             web3={ this.state.web3 }
             contract={ this.state.PrisonersContract }
           />

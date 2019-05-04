@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class GameTurnsPlayerChoiceComponent extends Component {
+class PlayerChoiceComponent extends Component {
 
   constructor(props){
     super(props);
@@ -42,4 +42,4 @@ class GameTurnsPlayerChoiceComponent extends Component {
   }
 }
 
-export default GameTurnsPlayerChoiceComponent;
+export default PlayerChoiceComponent;
