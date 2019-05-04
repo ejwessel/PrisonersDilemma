@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PlayerChoiceComponent from './PlayerChoiceComponent';
 
-class GameTurnsComponent extends Component {
+class TurnComponent extends Component {
   render() {
     return (
       <PlayerChoiceComponent 
@@ -12,4 +12,4 @@ class GameTurnsComponent extends Component {
   }
 }
 
-export default GameTurnsComponent;
+export default TurnComponent;

@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import GameTurnsComponent from '../GameTurnsComponent';
+import TurnComponent from '../TurnComponent';
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
-  ReactDOM.render(<GameTurnsComponent />, div);
+  ReactDOM.render(<TurnComponent />, div);
   ReactDOM.unmountComponentAtNode(div);
 });
