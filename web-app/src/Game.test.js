@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import GameComponent from './GameComponent';
+import Game from './Game';
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
-  ReactDOM.render(<GameComponent />, div);
+  ReactDOM.render(<Game />, div);
   ReactDOM.unmountComponentAtNode(div);
 });
