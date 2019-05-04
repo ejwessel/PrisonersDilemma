@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import GameCreatePlayerComponent from './GameCreatePlayerComponent';
-import GameCreateScoringComponent from './GameCreateScoringComponent';
+import PlayerComponent from './PlayerComponent';
+import ScoringComponent from './ScoringComponent';
 
 class GameCreateComponent extends Component {
   constructor(props) {
@@ -78,17 +78,17 @@ class GameCreateComponent extends Component {
     return (
       <div>
         <form onSubmit = { this.handleOnSubmit }>
-          <GameCreatePlayerComponent playerNum = { 1 } 
+          <PlayerComponent playerNum = { 1 } 
             setPlayerAddress = { this.handlePlayerAddress }
             setPlayerChoice = { this.handlePlayerChoice }
             setPlayerScore = { this.handlePlayerScore }
           />
-          <GameCreatePlayerComponent playerNum = { 2 } 
+          <PlayerComponent playerNum = { 2 } 
             setPlayerAddress = { this.handlePlayerAddress }
             setPlayerChoice = { this.handlePlayerChoice }
             setPlayerScore = { this.handlePlayerScore }
           />
-          <GameCreateScoringComponent 
+          <ScoringComponent 
             setWinScore = { this.handleWinScore }
             setGreedPoints = { this.handleGreedScore }
             setMutualPoints = { this.handleMutualScore }
