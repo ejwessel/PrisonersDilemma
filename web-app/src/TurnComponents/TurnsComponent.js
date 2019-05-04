@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import GameTurnsPlayerChoiceComponent from './GameTurnsPlayerChoiceComponent';
+import PlayerChoiceComponent from './PlayerChoiceComponent';
 
 class GameTurnsComponent extends Component {
   render() {
     return (
-      <GameTurnsPlayerChoiceComponent 
+      <PlayerChoiceComponent 
         web3={ this.props.web3 }
         contract = { this.props.contract }
       />
