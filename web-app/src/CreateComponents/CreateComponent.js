@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PlayerComponent from './PlayerComponent';
 import ScoringComponent from './ScoringComponent';
 
-class GameCreateComponent extends Component {
+class CreateComponent extends Component {
   constructor(props) {
     super(props);
 
@@ -101,4 +101,4 @@ class GameCreateComponent extends Component {
   }
 }
 
-export default GameCreateComponent;
+export default CreateComponent;
