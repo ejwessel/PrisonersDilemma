@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class GameJoinComponent extends Component {
+class JoinComponent extends Component {
 
   render() {
     return (
@@ -22,4 +22,4 @@ class GameJoinComponent extends Component {
   }
 }
 
-export default GameJoinComponent;
+export default JoinComponent;

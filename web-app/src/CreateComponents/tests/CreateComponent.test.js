@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import GameScoreboardComponent from '../GameScoreboardComponent';
+import CreateComponent from '../CreateComponent';
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
-  ReactDOM.render(<GameScoreboardComponent />, div);
+  ReactDOM.render(<CreateComponent />, div);
   ReactDOM.unmountComponentAtNode(div);
 });

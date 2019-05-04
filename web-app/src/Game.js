@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import GameJoinComponent from './GameJoinComponents/GameJoinComponent';
-import GameEventLogComponent from './GameEventLogComponents/GameEventLogComponent';
-import GameScoreboardComponent from './GameScoreboardComponents/GameScoreboardComponent';
-import GameTurnsComponent from './GameTurnsComponents/GameTurnsComponent';
-import GameCreateComponent from './GameCreateComponents/GameCreateComponent';
+import JoinComponent from './JoinComponents/JoinComponent';
+import EventLogComponent from './EventLogComponents/EventLogComponent';
+import ScoreboardComponent from './ScoreboardComponents/ScoreboardComponent';
+import TurnComponent from './TurnComponents/TurnComponent';
+import CreateComponent from './CreateComponents/CreateComponent';
 import PrisonersDilemma from "./contracts/PrisonersDilemma.json";
 import getWeb3 from './getWeb3';
 
-class GameComponent extends Component {
+class Game extends Component {
   constructor(props){
     super(props);
     
@@ -82,21 +82,6 @@ class GameComponent extends Component {
 
   }
 
-  render() {
-    return (
-      <div>
-        <GameCreateComponent 
-          deployContract={this.deployContract}
-        />
-          
-        {/* <GameJoinComponent />
-        <GameEventLogComponent />
-        <GameScoreboardComponent />
-        <GameTurnsComponent />  */}
-      </div>
-    );
-  }
-
   async submitChoice() {
     //call contarct with current account
     //check that contract has address first before continuing
@@ -123,22 +108,22 @@ class GameComponent extends Component {
     if (this.state.PrisonersContract == null) {
       return (
         <div>
-          <GameCreateComponent deployContract={ this.deployContract } />
+          <CreateComponent deployContract={ this.deployContract } />
         </div>
-        /* <GameJoinComponent /> */
+        /* <JoinComponent /> */
       );
     } else {
       return(
         <div>
-          <GameTurnsComponent
+          <TurnComponent
             web3={ this.state.web3 }
             contract={ this.state.PrisonersContract }
           />
 
           {
             //<button type="button" onClick={this.submitChoice}>Submit Choice</button>
-            //<GameEventLogComponent />
-            //<GameScoreboardComponent />
+            //<EventLogComponent />
+            //<ScoreboardComponent />
           }
         </div>
       )
@@ -146,4 +131,4 @@ class GameComponent extends Component {
   }
 }
 
-export default GameComponent;
+export default Game;
