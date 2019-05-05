@@ -70,31 +70,32 @@ contract('PrisonersDilemma', async (accounts) => {
 
   describe.only("Test playerChoose()", async() => {
     it("Test playerChoose succcess", async() => {
-        //Player chooses Share 
-        await truffleAssert.passes(instance.playerChoose(CHOICES["Share"], { from: accounts[0] }));
+      //Player chooses Share 
+      await truffleAssert.passes(instance.playerChoose(CHOICES["Share"], { from: accounts[0] }));
 
-        //Get Player from mapping
-        var player = await instance.players(accounts[0]);
-        var playerChoice = player[1].toNumber();
+      //Get Player from mapping
+      var player = await instance.players(accounts[0]);
+      var playerChoice = player[1].toNumber();
 
-        await assert.equal(playerChoice, CHOICES["Share"], `player choice ${ CHOICES["SHARE"] } was not recorded`);
+      await assert.equal(playerChoice, CHOICES["Share"], `player choice ${ CHOICES["SHARE"] } was not recorded`);
     });
     
     it("Test invalid Player", async() => {
-        await truffleAssert.fails(instance.playerChoose(CHOICES["Share"], { from: accounts[2] }), "Player address is not in contract");
+      await truffleAssert.fails(instance.playerChoose(CHOICES["Share"], { from: accounts[2] }), "Player address is not in contract");
     });
 
     it("Test invalid choice", async() => {
-        await truffleAssert.fails(instance.playerChoose(9, { from: accounts[0] }))
+      //fails on enum value being invalid, but has no error message
+      await truffleAssert.fails(instance.playerChoose(9, { from: accounts[0] }))
     });
 
-    it("Test player chooses NoChoice", async() => {
-        await truffleAssert.fails(instance.playerChoose(CHOICES["NoChoice"], { from: accounts[0] }), "pizza");
+    it("Test player chooses No Choice", async() => {
+      await truffleAssert.fails(instance.playerChoose(CHOICES["No_Choice"], { from: accounts[0] }), "No selection made, player chose No Choice");
     })
 
     it("Test player cannot update choice if choice is already made", async() => {
-        await instance.playerChoose(CHOICES["Share"], { from: accounts[0] });
-        await truffleAssert.fails(instance.playerChoose(CHOICES["Take"], { from: accounts[0] }), "Player already made a choice");
+      await instance.playerChoose(CHOICES["Share"], { from: accounts[0] });
+      await truffleAssert.fails(instance.playerChoose(CHOICES["Take"], { from: accounts[0] }), "Player already made a choice");
     })
   });
 
@@ -112,7 +113,7 @@ contract('PrisonersDilemma', async (accounts) => {
     });
   });
 
-  describe.only("Test scoring", async() => {
+  describe("Test scoring", async() => {
     it("Test scoring with 1 winner", async() => {
         instance = await PrisonersDilemma.new(
             [accounts[0], CHOICES["Share"], 0], 
