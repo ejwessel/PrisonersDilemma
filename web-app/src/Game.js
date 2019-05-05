@@ -82,11 +82,12 @@ class Game extends Component {
 
   }
 
-  async submitChoice() {
+  async submitChoice(choice) {
     //call contarct with current account
     //check that contract has address first before continuing
     var accounts = await this.state.web3.eth.getAccounts();
-   
+  
+    //listen for when player selects choice
     if(this.state.PrisonersContract != null) {
       this.state.PrisonersContract.once(
         "PlayerSelectedChoice",
@@ -94,8 +95,10 @@ class Game extends Component {
         (error, event) => { console.log("EVENT: " + event.event); }
       );
 
+      console.log(choice);
+
       var transaction = await this.state.PrisonersContract.methods
-        .playerChoose(1).send({
+        .playerChoose(choice).send({
           from: accounts[0]
         });
       console.log(transaction);
@@ -116,12 +119,12 @@ class Game extends Component {
       return(
         <div>
           <TurnComponent
-            web3={ this.state.web3 }
-            contract={ this.state.PrisonersContract }
+            web3 = { this.state.web3 }
+            contract = { this.state.PrisonersContract }
+            submitChoice = { this.submitChoice } 
           />
 
           {
-            //<button type="button" onClick={this.submitChoice}>Submit Choice</button>
             //<EventLogComponent />
             //<ScoreboardComponent />
           }

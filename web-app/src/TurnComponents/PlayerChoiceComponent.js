@@ -8,21 +8,21 @@ class PlayerChoiceComponent extends Component {
   }
 
   handleSubmit(event) {
-    console.log("does nothing yet");
     event.preventDefault();
-    //TODO: move the state upwards
+    this.props.submitChoice(1);
   }
 
   render() {
     return (
       <div> 
         <form onSubmit={ this.handleSubmit }>
-          <label>Player # Turn</label>
+          <label>Player Address: </label>
           {' '}
           <input
             type = "text"
-            contract_address = ""
-            value = "address"
+            contract_address = { this.props.playerAddress }
+            value = { this.props.playerAddress }
+            style = {{ width:"300px" }}
             readOnly
           />
           {' '}
