@@ -69,28 +69,33 @@ contract('PrisonersDilemma', async (accounts) => {
   });
 
   describe("Test playerChoose()", async() => {
-    it("Test playerChoose() succcess", async() => {
-        //Player chooses Share
+    it("Test playerChoose succcess", async() => {
+        //Player chooses Share 
         await truffleAssert.passes(instance.playerChoose(CHOICES["Share"], { from: accounts[0] }));
+
+        //Get Player from mapping
+        var player = await instance.players(accounts[0]);
+        var playerChoice = player[1].toNumber();
+
+        await assert.equal(playerChoice, CHOICES["Share"], `player choice ${ CHOICES["SHARE"] } was not recorded`);
+    });
+    
+    it("Test invalid Player", async() => {
+        await truffleAssert.fails(instance.playerChoose(CHOICES["Share"], { from: accounts[2] }));
     });
 
-//        //Get Player from mapping
-//        var player = await instance.players(accounts[0]);
-//        var playerChoice = player[1].toNumber();
-//        assert.equal(playerChoice, CHOICES["Share"], `player choice ${ CHOICES["SHARE"] } was not recorded`);
-//
-//        //Test invalid Player chooses action share
-//        await expectThrow(instance.playerChoose(CHOICES["Share"], { from: accounts[2] }));
-//
-//        //Test player cannot pass an invalid choice
-//        await expectThrow(instance.playerChoose(9, { from: accounts[0] }));
-//
-//        //Test player chooses NoChoice
-//        await expectThrow(instance.playerChoose(CHOICES["NoChoice"], { from: accounts[0] }));
-//
-//        //Test player cannot update choice if choice is already made
-//        await expectThrow(instance.playerChoose(CHOICES["Take"], { from: accounts[0] }));
-//    });
+    it("Test invalid choice", async() => {
+        await truffleAssert.fails(instance.playerChoose(9, { from: accounts[0] }))
+    });
+
+    it("Test player chooses NoChoice", async() => {
+        await truffleAssert.fails(instance.playerChoose(CHOICES["NoChoice"], { from: accounts[0] }));
+    })
+
+    it("Test player cannot update choice if choice is already made", async() => {
+        await instance.playerChoose(CHOICES["Share"], { from: accounts[0] });
+        await truffleAssert.fails(instance.playerChoose(CHOICES["Take"], { from: accounts[0] }));
+    })
   });
 
   describe("Test getPlayerScore()", async() => {
