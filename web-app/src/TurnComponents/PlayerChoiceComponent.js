@@ -8,9 +8,8 @@ class PlayerChoiceComponent extends Component {
   }
 
   handleSubmit(event) {
-    console.log("does nothing yet");
     event.preventDefault();
-    //TODO: move the state upwards
+    this.props.submitChoice(1);
   }
 
   render() {
