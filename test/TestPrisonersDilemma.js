@@ -6,25 +6,24 @@ var CHOICES = { "No_Choice": 0, "Share": 1, "Take": 2 };
 var EMPTY_ADDRESS = "0x0000000000000000000000000000000000000000";
 
 contract('PrisonersDilemma', async (accounts) => {
+  before(async() => {
+    console.log(`\tWeb 3 Api Version: ${ web3.version }`);
+    instance = await PrisonersDilemma.new(
+      [accounts[0], CHOICES["No_Choice"], 0], 
+      [accounts[1], CHOICES["No_Choice"], 0],
+      [20, 5, 1, 0]);
+  });
 
-    before(async() => {
-        console.log(`\tWeb 3 Api Version: ${ web3.version }`);
-        instance = await PrisonersDilemma.new(
-            [accounts[0], CHOICES["No_Choice"], 0], 
-            [accounts[1], CHOICES["No_Choice"], 0],
-            [20, 5, 1, 0]);
-    });
+  beforeEach(async() => {
+    snapShot = await helper.takeSnapshot();
+    snapshotId = snapShot['result'];
+  });
 
-    beforeEach(async() => {
-      snapShot = await helper.takeSnapshot();
-      snapshotId = snapShot['result'];
-    });
+  afterEach(async() => {
+    await helper.revertToSnapShot(snapshotId);
+  });
 
-    afterEach(async() => {
-        await helper.revertToSnapShot(snapshotId);
-    });
-
-  describe.only("Test Initial State of contract", async() => {
+  describe("Test Initial State of contract", async() => {
     before("setup", async() => {
       player_1 = await instance.players(accounts[0]);
       player_2 = await instance.players(accounts[1]);
@@ -94,15 +93,21 @@ contract('PrisonersDilemma', async (accounts) => {
 //    });
   });
 
-    it("Test getPlayerScore()", async() => {
-        //Test if address passed is not in the contract
-        await expectThrow(instance.getPlayerScore(accounts[2])); 
-
-        //Test that a player's score can be retrieved        
-        var playerScore = await instance.getPlayerScore(accounts[0]);
-        assert.equal(playerScore, 0, `player score ${ playerScore } does not match a score of 0`);
+  describe("Test getPlayerScore()", async() => {
+    it("Test a valid player's score can be retrieved", async() => {
+      //Test that a player's score can be retrieved        
+      await truffleAssert.passes(instance.getPlayerScore.call(accounts[0]));
+      let playerScore = await instance.getPlayerScore.call(accounts[0]);
+      assert.equal(playerScore, 0, `player score ${ playerScore } does not match a score of 0`);
     });
-    
+
+    it("Test an invalid player's score cannot be retrieved", async() => {
+      //Test if address passed is not in the contract
+      await truffleAssert.fails(instance.getPlayerScore(accounts[2]), "Player address is not in contract");
+    });
+  });
+  
+  describe("other tests", async() => {
     it("Test player choices reset", async() => {
         instance = await PrisonersDilemma.new(
             [accounts[0], CHOICES["Take"], 0], 
@@ -219,4 +224,5 @@ contract('PrisonersDilemma', async (accounts) => {
         estimate = await instance.endGame.estimateGas();
         console.log(`\tendGame() gas estimate: ${ estimate }`);
     });
+  });
 });
