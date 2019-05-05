@@ -68,7 +68,7 @@ contract('PrisonersDilemma', async (accounts) => {
     });
   });
 
-  describe.only("Test playerChoose()", async() => {
+  describe("Test playerChoose()", async() => {
     it("Test playerChoose succcess", async() => {
       //Player chooses Share 
       await truffleAssert.passes(instance.playerChoose(CHOICES["Share"], { from: accounts[0] }));
@@ -119,9 +119,6 @@ contract('PrisonersDilemma', async (accounts) => {
             [accounts[0], CHOICES["Share"], 0], 
             [accounts[1], CHOICES["Take"], 0],
             [1, 1, 1, 0]);
-
-        var player1 = await instance.players(accounts[0]);
-        var player2 = await instance.players(accounts[1]);
     
         //there should have been a winner
         var player1Score = await instance.getPlayerScore(accounts[0]);
@@ -133,7 +130,7 @@ contract('PrisonersDilemma', async (accounts) => {
         assert.equal(contractWinner, accounts[1], `contract winner ${ contractWinner }, does not match expected ${ accounts[1] }`);
 
         //Test if a player can continue to play after there is a winner
-        await truffleAssert.fails(instance.playerChoose(CHOICES["Take"], { from: accounts[0] }))
+        await truffleAssert.fails(instance.playerChoose(CHOICES["Take"], { from: accounts[0] }), "A winner or tie has been declared")
     });
 
     it("Test scoring with no progression", async() => {
@@ -141,10 +138,7 @@ contract('PrisonersDilemma', async (accounts) => {
             [accounts[0], CHOICES["Take"], 0], 
             [accounts[1], CHOICES["Take"], 0],
             [1, 1, 1, 0]);
-
-        var player1 = await instance.players(accounts[0]);
-        var player2 = await instance.players(accounts[1]);
-    
+            
         //there should be no winner
         var player1Score = await instance.getPlayerScore(accounts[0]);
         var player2Score = await instance.getPlayerScore(accounts[1]);
@@ -158,9 +152,6 @@ contract('PrisonersDilemma', async (accounts) => {
             [accounts[1], CHOICES["Share"], 0],
             [1, 1, 1, 0]);
 
-        var player1 = await instance.players(accounts[0]);
-        var player2 = await instance.players(accounts[1]);
-    
         //there should be no winner
         var player1Score = await instance.getPlayerScore(accounts[0]);
         var player2Score = await instance.getPlayerScore(accounts[1]);
@@ -171,7 +162,7 @@ contract('PrisonersDilemma', async (accounts) => {
         assert.equal(contractWinner, instance.address, `contract winner ${ contractWinner }, does not match expected ${ instance.address }`);
 
         //Test if a player can continue to play after the game is over with no winner
-        await truffleAssert.fails(instance.playerChoose(CHOICES["Take"], { from: accounts[0] }))
+        await truffleAssert.fails(instance.playerChoose(CHOICES["Take"], { from: accounts[0] }), "A winner or tie has been declared")
     });
   });
 
