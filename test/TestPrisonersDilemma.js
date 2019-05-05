@@ -111,22 +111,8 @@ contract('PrisonersDilemma', async (accounts) => {
       await truffleAssert.fails(instance.getPlayerScore(accounts[2]), "Player address is not in contract");
     });
   });
-  
-  describe("other tests", async() => {
-    it("Test player choices reset", async() => {
-        instance = await PrisonersDilemma.new(
-            [accounts[0], CHOICES["Take"], 0], 
-            [accounts[1], CHOICES["Take"], 0],
-            [1, 1, 1, 0]);
 
-        var player1 = await instance.players(accounts[0]);
-        var player2 = await instance.players(accounts[1]);
-
-        //both player choices should be reset
-        assert.equal(player1[1].toNumber(), 0, "Player 1 choice was not reset");
-        assert.equal(player2[1].toNumber(), 0, "Player 2 choice was not reset");
-    });
-
+  describe.only("Test scoring", async() => {
     it("Test scoring with 1 winner", async() => {
         instance = await PrisonersDilemma.new(
             [accounts[0], CHOICES["Share"], 0], 
@@ -146,9 +132,25 @@ contract('PrisonersDilemma', async (accounts) => {
         assert.equal(contractWinner, accounts[1], `contract winner ${ contractWinner }, does not match expected ${ accounts[1] }`);
 
         //Test if a player can continue to play after there is a winner
-        await expectThrow(instance.playerChoose(CHOICES["Take"], { from: accounts[0] }))
+        await truffleAssert.fails(instance.playerChoose(CHOICES["Take"], { from: accounts[0] }))
     });
+
+    it("Test scoring with no progression", async() => {
+        instance = await PrisonersDilemma.new(
+            [accounts[0], CHOICES["Take"], 0], 
+            [accounts[1], CHOICES["Take"], 0],
+            [1, 1, 1, 0]);
+
+        var player1 = await instance.players(accounts[0]);
+        var player2 = await instance.players(accounts[1]);
     
+        //there should be no winner
+        var player1Score = await instance.getPlayerScore(accounts[0]);
+        var player2Score = await instance.getPlayerScore(accounts[1]);
+        assert.equal(player1Score, 0, `Player 1 points should be 0, not ${ player1Score }`);
+        assert.equal(player2Score, 0, `Player 2 points should be 0, not ${ player2Score }`);
+    });
+
     it("Test scoring with no winner", async() => {
         instance = await PrisonersDilemma.new(
             [accounts[0], CHOICES["Share"], 0], 
@@ -168,10 +170,12 @@ contract('PrisonersDilemma', async (accounts) => {
         assert.equal(contractWinner, instance.address, `contract winner ${ contractWinner }, does not match expected ${ instance.address }`);
 
         //Test if a player can continue to play after the game is over with no winner
-        await expectThrow(instance.playerChoose(CHOICES["Take"], { from: accounts[0] }))
+        await truffleAssert.fails(instance.playerChoose(CHOICES["Take"], { from: accounts[0] }))
     });
+  });
 
-    it("Test scoring with no progression", async() => {
+  describe("other tests", async() => {
+    it("Test player choices reset", async() => {
         instance = await PrisonersDilemma.new(
             [accounts[0], CHOICES["Take"], 0], 
             [accounts[1], CHOICES["Take"], 0],
@@ -179,12 +183,10 @@ contract('PrisonersDilemma', async (accounts) => {
 
         var player1 = await instance.players(accounts[0]);
         var player2 = await instance.players(accounts[1]);
-    
-        //there should be no winner
-        var player1Score = await instance.getPlayerScore(accounts[0]);
-        var player2Score = await instance.getPlayerScore(accounts[1]);
-        assert.equal(player1Score, 0, `Player 1 points should be 0, not ${ player1Score }`);
-        assert.equal(player2Score, 0, `Player 2 points should be 0, not ${ player2Score }`);
+
+        //both player choices should be reset
+        assert.equal(player1[1].toNumber(), 0, "Player 1 choice was not reset");
+        assert.equal(player2[1].toNumber(), 0, "Player 2 choice was not reset");
     });
 
     it("Test an actual game", async() => {
