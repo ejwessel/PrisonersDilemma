@@ -5,6 +5,9 @@ const helper = require('./utils/utils.js');
 var CHOICES = { "No_Choice": 0, "Share": 1, "Take": 2 };
 var EMPTY_ADDRESS = "0x0000000000000000000000000000000000000000";
 
+
+let instance;
+
 contract('PrisonersDilemma', async (accounts) => {
   before(async() => {
     console.log(`\tWeb 3 Api Version: ${ web3.version }`);
@@ -97,6 +100,23 @@ contract('PrisonersDilemma', async (accounts) => {
       await instance.playerChoose(CHOICES["Share"], { from: accounts[0] });
       await truffleAssert.fails(instance.playerChoose(CHOICES["Take"], { from: accounts[0] }), "Player already made a choice");
     })
+
+    it("Test player choices reset", async() => {
+      //set up special instance
+      let instance = await PrisonersDilemma.new(
+          [accounts[0], CHOICES["Take"], 0], 
+          [accounts[1], CHOICES["Take"], 0],
+          [1, 1, 1, 0]);
+
+      let player1 = await instance.players(accounts[0]);
+      let choice_player1 = player1[1].toNumber();
+      let player2 = await instance.players(accounts[1]);
+      let choice_player2 = player2[1].toNumber();
+
+      //both player choices should be reset
+      assert.equal(choice_player1, 0, "Player 1 choice was not reset");
+      assert.equal(choice_player2, 0, "Player 2 choice was not reset");
+    });
   });
 
   describe("Test getPlayerScore()", async() => {
@@ -166,13 +186,43 @@ contract('PrisonersDilemma', async (accounts) => {
     });
   });
 
+  describe("other tests", async() => {
+    it("Test an actual game", async() => {
+      await instance.playerChoose(CHOICES["Share"], { from: accounts[0] });
+      await instance.playerChoose(CHOICES["Share"], { from: accounts[1] });
+
+      for(i = 0; i < 4; i++) {
+          await instance.playerChoose(CHOICES["Share"], { from: accounts[0] });
+          await instance.playerChoose(CHOICES["Take"], { from: accounts[1] });
+      }
+
+      var player1 = await instance.players(accounts[0]);
+      var player2 = await instance.players(accounts[1]);
+  
+      //both player choices should be reset
+      assert.equal(player1[1].toNumber(), 0, "Player 1 choice was not reset");
+      assert.equal(player2[1].toNumber(), 0, "Player 2 choice was not reset");
+
+      //there should have been a winner
+      var player1Score = await instance.getPlayerScore(accounts[0]);
+      var player2Score = await instance.getPlayerScore(accounts[1]);
+      assert.equal(player1Score, 1, `Player 1 points should be 1, not ${ player1Score }`);
+      assert.equal(player2Score, 21, `Player 2 points should be 21, not ${ player2Score }`);
+
+      var contractWinner = await instance.winner();
+      assert.equal(contractWinner, accounts[1], `contract winner ${ contractWinner }, does not match expected ${ accounts[1] }`);
+
+      //Test if a player can continue to play after there is a winner
+      await expectThrow(instance.playerChoose(CHOICES["Take"], { from: accounts[0] }))
+    });
+  });
+
   describe("Gas Estimates", async() => {
     it("Gas Analysis", async() => {
       var estimate = 0;
 
       // Create
       var receipt = await web3.eth.getTransactionReceipt(instance.transactionHash);
-      console.log(receipt);
       console.log(`\tcontract creation gas estimate: ${ receipt.gasUsed }`);
       // Choose
       estimate  = await instance.playerChoose.estimateGas(CHOICES["Share"], { from: accounts[0] });
@@ -180,51 +230,6 @@ contract('PrisonersDilemma', async (accounts) => {
       // Destroy 
       estimate = await instance.endGame.estimateGas();
       console.log(`\tendGame() gas estimate: ${ estimate }`);
-    });
-  });
-
-  describe("other tests", async() => {
-    it("Test player choices reset", async() => {
-      instance = await PrisonersDilemma.new(
-          [accounts[0], CHOICES["Take"], 0], 
-          [accounts[1], CHOICES["Take"], 0],
-          [1, 1, 1, 0]);
-
-      var player1 = await instance.players(accounts[0]);
-      var player2 = await instance.players(accounts[1]);
-
-      //both player choices should be reset
-      assert.equal(player1[1].toNumber(), 0, "Player 1 choice was not reset");
-      assert.equal(player2[1].toNumber(), 0, "Player 2 choice was not reset");
-    });
-
-    it("Test an actual game", async() => {
-        await instance.playerChoose(CHOICES["Share"], { from: accounts[0] });
-        await instance.playerChoose(CHOICES["Share"], { from: accounts[1] });
-
-        for(i = 0; i < 4; i++) {
-            await instance.playerChoose(CHOICES["Share"], { from: accounts[0] });
-            await instance.playerChoose(CHOICES["Take"], { from: accounts[1] });
-        }
-
-        var player1 = await instance.players(accounts[0]);
-        var player2 = await instance.players(accounts[1]);
-    
-        //both player choices should be reset
-        assert.equal(player1[1].toNumber(), 0, "Player 1 choice was not reset");
-        assert.equal(player2[1].toNumber(), 0, "Player 2 choice was not reset");
-
-        //there should have been a winner
-        var player1Score = await instance.getPlayerScore(accounts[0]);
-        var player2Score = await instance.getPlayerScore(accounts[1]);
-        assert.equal(player1Score, 1, `Player 1 points should be 1, not ${ player1Score }`);
-        assert.equal(player2Score, 21, `Player 2 points should be 21, not ${ player2Score }`);
-
-        var contractWinner = await instance.winner();
-        assert.equal(contractWinner, accounts[1], `contract winner ${ contractWinner }, does not match expected ${ accounts[1] }`);
-
-        //Test if a player can continue to play after there is a winner
-        await expectThrow(instance.playerChoose(CHOICES["Take"], { from: accounts[0] }))
     });
   });
 });
