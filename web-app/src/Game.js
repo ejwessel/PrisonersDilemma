@@ -95,7 +95,7 @@ class Game extends Component {
         (error, event) => { console.log("EVENT: " + event.event); }
       );
 
-      console.log(choice);
+      console.log("Player Selected: " + choice);
 
       var transaction = await this.state.PrisonersContract.methods
         .playerChoose(choice).send({
