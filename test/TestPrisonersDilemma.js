@@ -68,7 +68,7 @@ contract('PrisonersDilemma', async (accounts) => {
     });
   });
 
-  describe.only("Test playerChoose()", async() => {
+  describe("Test playerChoose()", async() => {
     it("Test playerChoose succcess", async() => {
       //Player chooses Share 
       await truffleAssert.passes(instance.playerChoose(CHOICES["Share"], { from: accounts[0] }));
@@ -175,19 +175,36 @@ contract('PrisonersDilemma', async (accounts) => {
     });
   });
 
+  describe("Gas Estimates", async() => {
+    it("Gas Analysis", async() => {
+      var estimate = 0;
+
+      // Create
+      var receipt = await web3.eth.getTransactionReceipt(instance.transactionHash);
+      console.log(receipt);
+      console.log(`\tcontract creation gas estimate: ${ receipt.gasUsed }`);
+      // Choose
+      estimate  = await instance.playerChoose.estimateGas(CHOICES["Share"], { from: accounts[0] });
+      console.log(`\tplayerChoose() gas estimate: ${ estimate }`);
+      // Destroy 
+      estimate = await instance.endGame.estimateGas();
+      console.log(`\tendGame() gas estimate: ${ estimate }`);
+    });
+  });
+
   describe("other tests", async() => {
     it("Test player choices reset", async() => {
-        instance = await PrisonersDilemma.new(
-            [accounts[0], CHOICES["Take"], 0], 
-            [accounts[1], CHOICES["Take"], 0],
-            [1, 1, 1, 0]);
+      instance = await PrisonersDilemma.new(
+          [accounts[0], CHOICES["Take"], 0], 
+          [accounts[1], CHOICES["Take"], 0],
+          [1, 1, 1, 0]);
 
-        var player1 = await instance.players(accounts[0]);
-        var player2 = await instance.players(accounts[1]);
+      var player1 = await instance.players(accounts[0]);
+      var player2 = await instance.players(accounts[1]);
 
-        //both player choices should be reset
-        assert.equal(player1[1].toNumber(), 0, "Player 1 choice was not reset");
-        assert.equal(player2[1].toNumber(), 0, "Player 2 choice was not reset");
+      //both player choices should be reset
+      assert.equal(player1[1].toNumber(), 0, "Player 1 choice was not reset");
+      assert.equal(player2[1].toNumber(), 0, "Player 2 choice was not reset");
     });
 
     it("Test an actual game", async() => {
@@ -217,20 +234,6 @@ contract('PrisonersDilemma', async (accounts) => {
 
         //Test if a player can continue to play after there is a winner
         await expectThrow(instance.playerChoose(CHOICES["Take"], { from: accounts[0] }))
-    });
-
-    it("Gas Analysis", async() => {
-        var estimate = 0;
-
-        // Create
-        var receipt = await web3.eth.getTransactionReceipt(instance.transactionHash);
-        console.log(`\tcontract creation gas estimate: ${ receipt.gasUsed }`);
-        // Choose
-        estimate  = await instance.playerChoose.estimateGas(CHOICES["Share"], { from: accounts[0] });
-        console.log(`\tplayerChoose() gas estimate: ${ estimate }`);
-        // Destroy 
-        estimate = await instance.endGame.estimateGas();
-        console.log(`\tendGame() gas estimate: ${ estimate }`);
     });
   });
 });
