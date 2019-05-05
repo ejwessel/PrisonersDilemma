@@ -1,5 +1,6 @@
-var expectThrow = require("./helper.js");
 var PrisonersDilemma = artifacts.require("PrisonersDilemma");
+const truffleAssert = require('truffle-assertions');
+const helper = require('./utils/utils.js');
 
 var CHOICES = { "No_Choice": 0, "Share": 1, "Take": 2 };
 var EMPTY_ADDRESS = "0x0000000000000000000000000000000000000000";
@@ -8,17 +9,19 @@ contract('PrisonersDilemma', async (accounts) => {
 
     before(async() => {
         console.log(`\tWeb 3 Api Version: ${ web3.version }`);
-    });
-
-    beforeEach(async() => {
         instance = await PrisonersDilemma.new(
             [accounts[0], CHOICES["No_Choice"], 0], 
             [accounts[1], CHOICES["No_Choice"], 0],
             [20, 5, 1, 0]);
     });
 
+    beforeEach(async() => {
+      snapShot = await helper.takeSnapshot();
+      snapshotId = snapShot['result'];
+    });
+
     afterEach(async() => {
-        await instance.endGame();
+        await helper.revertToSnapShot(snapshotId);
     });
 
     it("Test Initial State of contract", async() => {
@@ -46,27 +49,30 @@ contract('PrisonersDilemma', async (accounts) => {
         assert.equal(playerAddr, EMPTY_ADDRESS, `player address ${ playerAddr } was valid and should not be`);
     });
 
-    it("Test playerChoose()", async() => {
+  describe("Test playerChoose()", async() => {
+    it("Test playerChoose() succcess", async() => {
         //Player chooses Share
-        await instance.playerChoose(CHOICES["Share"], { from: accounts[0] });
-
-        //Get Player from mapping
-        var player = await instance.players(accounts[0]);
-        var playerChoice = player[1].toNumber();
-        assert.equal(playerChoice, CHOICES["Share"], `player choice ${ CHOICES["SHARE"] } was not recorded`);
-
-        //Test invalid Player chooses action share
-        await expectThrow(instance.playerChoose(CHOICES["Share"], { from: accounts[2] }));
-
-        //Test player cannot pass an invalid choice
-        await expectThrow(instance.playerChoose(9, { from: accounts[0] }));
-
-        //Test player chooses NoChoice
-        await expectThrow(instance.playerChoose(CHOICES["NoChoice"], { from: accounts[0] }));
-
-        //Test player cannot update choice if choice is already made
-        await expectThrow(instance.playerChoose(CHOICES["Take"], { from: accounts[0] }));
+        await truffleAssert.passes(instance.playerChoose(CHOICES["Share"], { from: accounts[0] }));
     });
+
+//        //Get Player from mapping
+//        var player = await instance.players(accounts[0]);
+//        var playerChoice = player[1].toNumber();
+//        assert.equal(playerChoice, CHOICES["Share"], `player choice ${ CHOICES["SHARE"] } was not recorded`);
+//
+//        //Test invalid Player chooses action share
+//        await expectThrow(instance.playerChoose(CHOICES["Share"], { from: accounts[2] }));
+//
+//        //Test player cannot pass an invalid choice
+//        await expectThrow(instance.playerChoose(9, { from: accounts[0] }));
+//
+//        //Test player chooses NoChoice
+//        await expectThrow(instance.playerChoose(CHOICES["NoChoice"], { from: accounts[0] }));
+//
+//        //Test player cannot update choice if choice is already made
+//        await expectThrow(instance.playerChoose(CHOICES["Take"], { from: accounts[0] }));
+//    });
+  });
 
     it("Test getPlayerScore()", async() => {
         //Test if address passed is not in the contract

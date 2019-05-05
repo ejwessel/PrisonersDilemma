@@ -1,0 +1,25 @@
+{
+  "name": "prisonersdilemma",
+  "version": "1.0.0",
+  "description": "Contract mimics that of the Prisoners's Dilemma",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ejwessel/PrisonersDilemma.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ejwessel/PrisonersDilemma/issues"
+  },
+  "homepage": "https://github.com/ejwessel/PrisonersDilemma#readme",
+  "dependencies": {
+    "truffle-assertions": "^0.8.2"
+  }
+}
