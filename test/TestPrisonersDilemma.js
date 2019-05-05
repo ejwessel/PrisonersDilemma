@@ -24,30 +24,50 @@ contract('PrisonersDilemma', async (accounts) => {
         await helper.revertToSnapShot(snapshotId);
     });
 
-    it("Test Initial State of contract", async() => {
-        //Get Player from mapping
-        var player = await instance.players(accounts[0]);
-        var playerAddr = player[0];
-        var playerChoice = player[1].toNumber();
-        var playerScore = player[2];
-       
-        //Test Player we expect to exist exists
-        assert.equal(playerAddr, accounts[0], `player address ${ playerAddr } is not within the contract mapping`);
-        assert.equal(playerChoice, CHOICES["No_Choice"], `player choice ${ playerChoice } does not match no choice`);
-        assert.equal(playerScore, 0, `player score ${ playerScore } does not match a score of 0`);
-
-        //Test winner is nobody
-        var contractWinner = await instance.winner();
-        assert.equal(contractWinner, EMPTY_ADDRESS, `initial contract winner should be empty`);
+  describe.only("Test Initial State of contract", async() => {
+    before("setup", async() => {
+      player_1 = await instance.players(accounts[0]);
+      player_2 = await instance.players(accounts[1]);
     });
 
-    it("Test invalid player not in contract", async() => {
-        //Get Invalid Player from mapping
-        var player = await instance.players(accounts[2]);
-        var playerAddr = player[0];
-        //Invalid Player's don't have an address saved for their address
-        assert.equal(playerAddr, EMPTY_ADDRESS, `player address ${ playerAddr } was valid and should not be`);
+    it("Test players exist", async() => {
+      let address_player1 = player_1[0];
+      let address_player2 = player_2[0];
+
+      assert.equal(address_player1, accounts[0], "player 1 does not exist");
+      assert.equal(address_player2, accounts[1], "player 2 does not exist");
     });
+
+    it("Test players initial choices", async() => {
+      let choice_player1 = player_1[1].toNumber();
+      let choice_player2 = player_2[1].toNumber();
+
+      assert.equal(choice_player1, 0, "player 1 score should be 0");
+      assert.equal(choice_player2, 0, "player 2 score should be 0");
+    });
+
+    it("Test players initial scores", async() => {
+      let score_player1 = player_1[2].toNumber();
+      let score_player2 = player_2[2].toNumber();
+
+      assert.equal(score_player1, 0, "player 1 score should be 0");
+      assert.equal(score_player2, 0, "player 2 score should be 0");
+    });
+
+    it("Test invalid player", async() => {
+      //Get Invalid Player from mapping
+      var player = await instance.players(accounts[2]);
+      var playerAddr = player[0];
+      //Invalid Player's don't have an address saved for their address
+      assert.equal(playerAddr, EMPTY_ADDRESS, `player address ${ playerAddr } was valid and should not be`);
+    });
+
+    it("Test initial winner", async() => {
+      //Test winner is nobody
+      var contractWinner = await instance.winner();
+      assert.equal(contractWinner, EMPTY_ADDRESS, `initial contract winner should be empty`);
+    });
+  });
 
   describe("Test playerChoose()", async() => {
     it("Test playerChoose() succcess", async() => {
