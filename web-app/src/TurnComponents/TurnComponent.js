@@ -6,13 +6,13 @@ class TurnComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentPlayerAddress: null
+      currentPlayerAddress: this.loadCurrentPlayerAddress()
     }
   }
 
   async loadCurrentPlayerAddress() {
     let address = await this.props.web3.eth.getAccounts()
-    this.setState({ currentPlayerAddress: address })
+    this.setState({ currentPlayerAddress: address[0] })
   }
 
   render() {
@@ -21,6 +21,7 @@ class TurnComponent extends Component {
         web3 = { this.props.web3 }
         contract = { this.props.contract }
         submitChoice = { this.props.submitChoice }
+        playerAddress = { this.state.currentPlayerAddress }
       />
     );
   }

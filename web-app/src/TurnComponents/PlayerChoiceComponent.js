@@ -16,12 +16,13 @@ class PlayerChoiceComponent extends Component {
     return (
       <div> 
         <form onSubmit={ this.handleSubmit }>
-          <label>Player # Turn</label>
+          <label>Player Address: </label>
           {' '}
           <input
             type = "text"
-            contract_address = ""
-            value = "address"
+            contract_address = { this.props.playerAddress }
+            value = { this.props.playerAddress }
+            style = {{ width:"300px" }}
             readOnly
           />
           {' '}
