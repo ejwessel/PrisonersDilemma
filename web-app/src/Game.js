@@ -45,6 +45,7 @@ class Game extends Component {
     console.log("contract instance: ");
     console.log(contract);
     this.setState({PrisonersContract: contract});
+    await this.checkWinner();
   }
 
   async deployContract(player1, player2, scoreData) {
