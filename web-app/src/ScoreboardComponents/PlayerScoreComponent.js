@@ -4,7 +4,7 @@ class PlayerScoreComponent extends Component {
   render() {
     return (
       <div>
-        <label>Player # Score</label>
+        <label>Player { this.props.address} Score</label>
         {' '}
         <input
           type = "text"
