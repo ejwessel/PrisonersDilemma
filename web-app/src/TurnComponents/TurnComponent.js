@@ -38,7 +38,7 @@ class TurnComponent extends Component {
         />
         { 
           this.props.winner !== '0x0000000000000000000000000000000000000000' ?
-          <button>end game</button> : null 
+          (<button onClick={this.props.endGame}>end game</button>) : null 
         }
       </div>
     );

@@ -23,6 +23,7 @@ class Game extends Component {
     this.deployContract = this.deployContract.bind(this);
     this.submitChoice = this.submitChoice.bind(this);
     this.checkWinner = this.checkWinner.bind(this);
+    this.endGame = this.endGame.bind(this);
   }
 
   componentDidMount = async () => {
@@ -120,8 +121,22 @@ class Game extends Component {
         .winner.call({
           from: accounts[0]
       });
-      console.log(winnerVal);
+      console.log("winner: " + winnerVal);
       this.setState({winner: winnerVal});
+    } else {
+      console.log("Contract has not been deployed");
+    }
+  }
+
+  async endGame() {
+    var accounts = await this.state.web3.eth.getAccounts();
+
+    if(this.state.PrisonersContract != null){
+      var transaction = await this.state.PrisonersContract.methods
+        .endGame.send({
+          from: accounts[0]
+      });
+      console.log(transaction);
     } else {
       console.log("Contract has not been deployed");
     }
@@ -143,6 +158,7 @@ class Game extends Component {
             contract = { this.state.PrisonersContract }
             submitChoice = { this.submitChoice } 
             winner = { this.state.winner }
+            endGame = { this.endGame }
           />
 
           {
