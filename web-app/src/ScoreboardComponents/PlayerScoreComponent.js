@@ -3,23 +3,23 @@ import React, { Component } from 'react';
 class PlayerScoreComponent extends Component {
   render() {
     return (
-      <form>
+      <div>
         <label>Player # Score</label>
         {' '}
         <input
           type = "text"
-          score = "0"
-          value = "0"
+          value = { this.props.score }
           readOnly
         />
         {' '}
+        of
+        {' '}
         <input
           type = "text"
-          winning_score = "0"
-          value = "0"
+          value = { this.props.maxScore }
           readOnly
         />
-      </form>
+      </div>
     );
   }
 }
