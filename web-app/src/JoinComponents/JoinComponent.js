@@ -6,7 +6,7 @@ class JoinComponent extends Component {
     super(props);
 
     this.state = {
-      contractAddress: '0x0000000000000000000000000000000000000000'
+      contractAddress: null
     }
 
     this.handleContractAddress = this.handleContractAddress.bind(this);
@@ -14,12 +14,14 @@ class JoinComponent extends Component {
   }
 
   handleContractAddress(event) {
-    this.setState({contractAddress: event.target.value}) 
+      this.setState({contractAddress: event.target.value}) 
   }
 
   handleStartGame(event) {
     event.preventDefault();
-    this.props.setContract(this.state.contractAddress);
+    if (this.state.contractAddress != null) {
+      this.props.setContract(this.state.contractAddress);
+    }
   }
 
   render() {
