@@ -73,7 +73,7 @@ class Game extends Component {
         arguments : [
             [this.state.player1.address, Number(this.state.player1.choice), Number(this.state.player1.score)],
             [this.state.player2.address, Number(this.state.player2.choice), Number(this.state.player2.score)],
-            [Number(this.state.scoreData.winScore), Number(this.state.scoreData.mutualScore), Number(this.state.scoreData.greedScore), Number(this.state.scoreData.mutualGreedScore)]
+            [Number(this.state.scoreData.winScore), Number(this.state.scoreData.greedScore), Number(this.state.scoreData.mutualScore), Number(this.state.scoreData.mutualGreedScore)]
         ]
     };
 
@@ -207,7 +207,7 @@ class Game extends Component {
           <ScoreboardComponent
             player1Score = { this.state.player1.score } 
             player2Score = { this.state.player2.score }
-            maxScore = { this.state.scoreData.winScore }
+            maxScore = { this.state.scoreData.scoreData }
           />
           {
             //<EventLogComponent />
