@@ -24,10 +24,28 @@ class Game extends Component {
     this.submitChoice = this.submitChoice.bind(this);
     this.checkWinner = this.checkWinner.bind(this);
     this.endGame = this.endGame.bind(this);
+    this.setContract = this.setContract.bind(this);
   }
 
-  componentDidMount = async () => {
+  async componentDidMount() {
     this.setState({web3: await getWeb3()});
+  }
+
+  async setContract(newContractAddress) {
+    //take address and make an object that targets contract
+    const {web3} = this.state;
+    var accounts = await web3.eth.getAccounts();
+    var contract_abi = PrisonersDilemma['abi'];
+    var contract = await new web3.eth.Contract(
+      contract_abi,
+      newContractAddress,
+      { transactionConfirmationBlocks:1, transactionPollingTimeout: 3 }
+    );
+
+    console.log("contract instance: ");
+    console.log(contract);
+    this.setState({PrisonersContract: contract});
+    await this.checkWinner();
   }
 
   async deployContract(player1, player2, scoreData) {
@@ -147,6 +165,8 @@ class Game extends Component {
       return (
         <div>
           <CreateComponent deployContract={ this.deployContract } />
+          <br/>
+          <JoinComponent setContract={ this.setContract } />
         </div>
         /* <JoinComponent /> */
       );
