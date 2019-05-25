@@ -17,7 +17,8 @@ class Game extends Component {
       player2: {},
       scoreData: {},
       PrisonersContract: null,
-      winner: null
+      winner: null,
+      eventLogger: ""
     };
 
     this.deployContract = this.deployContract.bind(this);
@@ -81,11 +82,15 @@ class Game extends Component {
 
 
     //print log that the contract was initialized
-    contract.once(
-      "ContractInitialized",
+    contract.events.allEvents(
       null,
-      (error, event) => { console.log("EVENT: " + event.event); }
+      (error, event) => { 
+        console.log("EVENT: " + event.event); 
+        this.setState({ eventLogger: this.state.eventLogger.concat("\n" + event.event) })
+        console.log(this.state.eventLogger)
+      }
     );
+    
     var contract = await contract.deploy(options)
     .send({
       from: accounts[0],
@@ -108,12 +113,6 @@ class Game extends Component {
   
     //listen for when player selects choice
     if(this.state.PrisonersContract != null) {
-      this.state.PrisonersContract.once(
-        "PlayerSelectedChoice",
-        null,
-        (error, event) => { console.log("EVENT: " + event.event); }
-      );
-
       console.log("Player Selected: " + choice);
 
       var transaction = await this.state.PrisonersContract.methods
@@ -192,7 +191,6 @@ class Game extends Component {
           <br/>
           <JoinComponent setContract={ this.setContract } />
         </div>
-        /* <JoinComponent /> */
       );
     } else {
       return(
@@ -201,7 +199,6 @@ class Game extends Component {
             web3 = { this.state.web3 }
             contract = { this.state.PrisonersContract }
             submitChoice = { this.submitChoice } 
-            winner = { this.state.winner }
             endGame = { this.endGame }
           />
           <ScoreboardComponent
@@ -209,8 +206,11 @@ class Game extends Component {
             player2Score = { this.state.player2.score }
             maxScore = { this.state.scoreData.winScore }
           />
+          <EventLogComponent logger = { this.state.eventLogger } />
+          <br/>
           {
-            //<EventLogComponent />
+            this.state.winner !== '0x0000000000000000000000000000000000000000' ?
+            (<button onClick={this.props.endGame}>end game</button>) : null
           }
         </div>
       )
