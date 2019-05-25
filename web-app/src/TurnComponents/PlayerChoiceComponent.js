@@ -4,12 +4,22 @@ class PlayerChoiceComponent extends Component {
 
   constructor(props){
     super(props);
+
+    this.state = {
+      playerChoice: null
+    }
+
     this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleChoice = this.handleChoice.bind(this)
   }
 
   handleSubmit(event) {
     event.preventDefault();
-    this.props.submitChoice(1);
+    this.props.submitChoice(Number(this.state.playerChoice));
+  }
+
+  handleChoice(event) {
+    this.setState({ playerChoice: event.target.value })
   }
 
   render() {
@@ -26,10 +36,10 @@ class PlayerChoiceComponent extends Component {
             readOnly
           />
           {' '}
-          <select>
-            <option value = "No Choice">No Choice</option>
-            <option value = "Share">Share</option>
-            <option value = "Take">Take</option>
+          <select onChange = { this.handleChoice }>
+            <option value = "0">No Choice</option>
+            <option value = "1">Share</option>
+            <option value = "2">Take</option>
           </select>
           {' '}
           <input
