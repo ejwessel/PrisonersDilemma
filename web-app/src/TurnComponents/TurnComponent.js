@@ -10,6 +10,17 @@ class TurnComponent extends Component {
     }
   }
 
+  componentDidMount() {
+    //this makes the assumption that the current address is already set
+    window.ethereum.on('accountsChanged', async() => {
+      console.log("detected account change");
+      let accounts = await window.ethereum.enable();
+      let currentAccount = accounts[0];
+      this.setState({ currentPlayerAddress: currentAccount })
+      console.log(currentAccount);
+    });
+  }
+
   async loadCurrentPlayerAddress() {
     let address = await this.props.web3.eth.getAccounts()
     this.setState({ currentPlayerAddress: address[0] })
