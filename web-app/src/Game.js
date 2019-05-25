@@ -71,12 +71,9 @@ class Game extends Component {
     var options = {
         data : contract_byte_code,
         arguments : [
-              ['0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1', 0, 0],
-              ['0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0', 0, 0],
-              [5, 5, 1, 0]
-//            [this.state.player1.address, Number(this.state.player1.choice), Number(this.state.player1.score)],
-//            [this.state.player2.address, Number(this.state.player2.choice), Number(this.state.player2.score)],
-//            [Number(this.state.scoreData.winScore), Number(this.state.scoreData.mutualScore), Number(this.state.scoreData.greedScore), Number(this.state.scoreData.mutualGreedScore)]
+            [this.state.player1.address, Number(this.state.player1.choice), Number(this.state.player1.score)],
+            [this.state.player2.address, Number(this.state.player2.choice), Number(this.state.player2.score)],
+            [Number(this.state.scoreData.winScore), Number(this.state.scoreData.mutualScore), Number(this.state.scoreData.greedScore), Number(this.state.scoreData.mutualGreedScore)]
         ]
     };
 
@@ -126,6 +123,17 @@ class Game extends Component {
       console.log(transaction);
 
       await this.checkWinner();
+      let player1Score = await this.getPlayerScore(this.state.player1.address);
+      this.setState({ 
+        player1: { ...this.state.player1, score: player1Score }
+      });
+      console.log(this.state.player1.score)
+
+      let player2Score = await this.getPlayerScore(this.state.player2.address);
+      this.setState({ 
+        player2: { ...this.state.player2, score: player2Score }
+      });
+      console.log(this.state.player2.score)
 
     } else {
       console.log("Contract has not been deployed");
@@ -147,7 +155,7 @@ class Game extends Component {
     }
   }
 
-  async getPlayerScores(playerAddress) {
+  async getPlayerScore(playerAddress) {
     var accounts = await this.state.web3.eth.getAccounts();
 
     if(this.state.PrisonersContract != null){
@@ -156,7 +164,7 @@ class Game extends Component {
           from: accounts[0]
       });
       console.log(playerScore);
-      return playerScore
+      return playerScore;
     } else {
       console.log("Contract has not been deployed");
     }
@@ -196,10 +204,13 @@ class Game extends Component {
             winner = { this.state.winner }
             endGame = { this.endGame }
           />
-
+          <ScoreboardComponent
+            player1Score = { this.state.player1.score } 
+            player2Score = { this.state.player2.score }
+            maxScore = { this.state.scoreData.winScore }
+          />
           {
             //<EventLogComponent />
-            //<ScoreboardComponent />
           }
         </div>
       )

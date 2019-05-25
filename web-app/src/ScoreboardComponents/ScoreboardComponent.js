@@ -5,8 +5,14 @@ class ScoreboardComponent extends Component {
   render() {
     return (
       <div>
-        <PlayerScoreComponent />
-        <PlayerScoreComponent />
+        <PlayerScoreComponent 
+          score ={ this.props.player1Score }
+          maxScore = {this.props.maxScore }
+        />
+        <PlayerScoreComponent 
+          score ={ this.props.player2Score }
+          maxScore = {this.props.maxScore }
+        />
       </div>
     );
   }
