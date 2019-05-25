@@ -21,6 +21,7 @@ class Game extends Component {
 
     this.deployContract = this.deployContract.bind(this);
     this.submitChoice = this.submitChoice.bind(this);
+    this.checkWinner = this.checkWinner.bind(this);
   }
 
   componentDidMount = async () => {
@@ -51,7 +52,7 @@ class Game extends Component {
         arguments : [
               ['0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1', 0, 0],
               ['0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0', 0, 0],
-              [20, 5, 1, 0]
+              [5, 5, 1, 0]
 //            [this.state.player1.address, Number(this.state.player1.choice), Number(this.state.player1.score)],
 //            [this.state.player2.address, Number(this.state.player2.choice), Number(this.state.player2.score)],
 //            [Number(this.state.scoreData.winScore), Number(this.state.scoreData.mutualScore), Number(this.state.scoreData.greedScore), Number(this.state.scoreData.mutualGreedScore)]
@@ -102,6 +103,26 @@ class Game extends Component {
           from: accounts[0]
         });
       console.log(transaction);
+
+      await this.checkWinner();
+
+    } else {
+      console.log("Contract has not been deployed");
+    }
+  }
+
+  async checkWinner() {
+    var accounts = await this.state.web3.eth.getAccounts();
+
+    if(this.state.PrisonersContract != null){
+      var winner = await this.state.PrisonersContract.methods
+        .winner.call({
+          from: accounts[0]
+      });
+      console.log(winner);
+      if(winner !="0x0000000000000000000000000000000000000000") {
+        console.log("winner: " + winner);
+      }
     } else {
       console.log("Contract has not been deployed");
     }
