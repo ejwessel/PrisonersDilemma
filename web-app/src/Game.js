@@ -202,8 +202,8 @@ class Game extends Component {
             endGame = { this.endGame }
           />
           <ScoreboardComponent
-            player1Score = { this.state.player1.score } 
-            player2Score = { this.state.player2.score }
+            player1 = { this.state.player1 } 
+            player2 = { this.state.player2 }
             maxScore = { this.state.scoreData.winScore }
           />
           <EventLogComponent logger = { this.state.eventLogger } />

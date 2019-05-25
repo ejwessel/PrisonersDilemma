@@ -6,11 +6,13 @@ class ScoreboardComponent extends Component {
     return (
       <div>
         <PlayerScoreComponent 
-          score ={ this.props.player1Score }
+          address = { this.props.player1.address }
+          score = { this.props.player1.score }
           maxScore = {this.props.maxScore }
         />
         <PlayerScoreComponent 
-          score ={ this.props.player2Score }
+          address = { this.props.player2.address }
+          score = { this.props.player2.score }
           maxScore = {this.props.maxScore }
         />
       </div>
