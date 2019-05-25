@@ -28,12 +28,19 @@ class TurnComponent extends Component {
 
   render() {
     return (
-      <PlayerChoiceComponent 
-        web3 = { this.props.web3 }
-        contract = { this.props.contract }
-        submitChoice = { this.props.submitChoice }
-        playerAddress = { this.state.currentPlayerAddress }
-      />
+
+      <div>
+        <PlayerChoiceComponent 
+          web3 = { this.props.web3 }
+          contract = { this.props.contract }
+          submitChoice = { this.props.submitChoice }
+          playerAddress = { this.state.currentPlayerAddress }
+        />
+        { 
+          this.props.winner !== '0x0000000000000000000000000000000000000000' ?
+          (<button onClick={this.props.endGame}>end game</button>) : null 
+        }
+      </div>
     );
   }
 }
