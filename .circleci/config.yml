@@ -9,14 +9,17 @@ jobs:
           name: Install
           command: npm install
       - run:
-          name: Compile
+          name: Compile Contracts
           command: npm run truffle-compile
       - run:
-          name: Migrate
+          name: Migrate Contracts
           command: npm run ganache > /dev/null & sleep 10 && npm run truffle-migrate
       - run:
-          name: Test
+          name: Test Contracts
           command: npm run ganache > /dev/null & sleep 10 && npm run truffle-test
+      - run:
+          name: Test Web View
+          command: cd web-app && npm run test && npm run truffle-test
 
 workflows:
   version: 2
