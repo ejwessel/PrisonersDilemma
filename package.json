@@ -1,0 +1,34 @@
+{
+  "name": "PrisonersDilemma",
+  "version": "1.0.0",
+  "description": "Contract mimics that of the Prisoners's Dilemma",
+  "main": "truffle-config.js",
+  "directories": {
+    "truffle-migrate": "truffle migrate",
+    "truffle-compile": "truffle compile",
+    "truffle-test": "truffle test",
+    "ganache": "ganache-cli -d"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ejwessel/PrisonersDilemma.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ejwessel/PrisonersDilemma/issues"
+  },
+  "homepage": "https://github.com/ejwessel/PrisonersDilemma#readme",
+  "devDependencies": {
+    "ganache-cli": "6.4.3"
+  },
+  "dependencies": {
+    "truffle": "^5.0.19",
+    "truffle-assertions": "^0.9.0",
+    "web3": "^1.0.0-beta.37"
+  }
+}
