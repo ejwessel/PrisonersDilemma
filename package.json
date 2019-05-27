@@ -4,13 +4,13 @@
   "description": "Contract mimics that of the Prisoners's Dilemma",
   "main": "truffle-config.js",
   "directories": {
+    "test": "test"
+  },
+  "scripts": {
     "truffle-migrate": "truffle migrate",
     "truffle-compile": "truffle compile",
     "truffle-test": "truffle test",
     "ganache": "ganache-cli -d"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
