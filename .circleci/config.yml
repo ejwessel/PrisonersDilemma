@@ -1,0 +1,28 @@
+version: 2.1
+jobs:
+  test:
+    docker:
+      - image: circleci/node:8.16.0-jessie
+    steps:
+      - checkout
+      - run:
+          name: Install
+          command: npm install
+      - run:
+          name: Compile Contracts
+          command: npm run truffle-compile
+      - run:
+          name: Migrate Contracts
+          command: npm run ganache > /dev/null & sleep 10 && npm run truffle-migrate
+      - run:
+          name: Test Contracts
+          command: npm run ganache > /dev/null & sleep 10 && npm run truffle-test
+      - run:
+          name: Test Web View
+          command: cd web-app && npm install && npm run test a && npm run truffle-test
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - test
