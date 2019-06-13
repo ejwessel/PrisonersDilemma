@@ -1,104 +1,144 @@
-var expectThrow = require("./helper.js");
 var PrisonersDilemma = artifacts.require("PrisonersDilemma");
+const truffleAssert = require('truffle-assertions');
+const helper = require('./utils/utils.js');
 
 var CHOICES = { "No_Choice": 0, "Share": 1, "Take": 2 };
 var EMPTY_ADDRESS = "0x0000000000000000000000000000000000000000";
 
+
+let instance;
+
 contract('PrisonersDilemma', async (accounts) => {
+  before(async() => {
+    console.log(`\tWeb 3 Api Version: ${ web3.version }`);
+    instance = await PrisonersDilemma.new(
+      [accounts[0], CHOICES["No_Choice"], 0], 
+      [accounts[1], CHOICES["No_Choice"], 0],
+      [20, 5, 1, 0]);
+  });
 
-    before(async() => {
-        console.log(`\tWeb 3 Api Version: ${ web3.version }`);
+  beforeEach(async() => {
+    snapShot = await helper.takeSnapshot();
+    snapshotId = snapShot['result'];
+  });
+
+  afterEach(async() => {
+    await helper.revertToSnapShot(snapshotId);
+  });
+
+  describe("Test Initial State of contract", async() => {
+    before("setup", async() => {
+      player_1 = await instance.players(accounts[0]);
+      player_2 = await instance.players(accounts[1]);
     });
 
-    beforeEach(async() => {
-        instance = await PrisonersDilemma.new(
-            [accounts[0], CHOICES["No_Choice"], 0], 
-            [accounts[1], CHOICES["No_Choice"], 0],
-            [20, 5, 1, 0]);
+    it("Test players exist", async() => {
+      let address_player1 = player_1[0];
+      let address_player2 = player_2[0];
+
+      assert.equal(address_player1, accounts[0], "player 1 does not exist");
+      assert.equal(address_player2, accounts[1], "player 2 does not exist");
     });
 
-    afterEach(async() => {
-        await instance.endGame();
+    it("Test players initial choices", async() => {
+      let choice_player1 = player_1[1].toNumber();
+      let choice_player2 = player_2[1].toNumber();
+
+      assert.equal(choice_player1, 0, "player 1 score should be 0");
+      assert.equal(choice_player2, 0, "player 2 score should be 0");
     });
 
-    it("Test Initial State of contract", async() => {
-        //Get Player from mapping
-        var player = await instance.players(accounts[0]);
-        var playerAddr = player[0];
-        var playerChoice = player[1].toNumber();
-        var playerScore = player[2];
-       
-        //Test Player we expect to exist exists
-        assert.equal(playerAddr, accounts[0], `player address ${ playerAddr } is not within the contract mapping`);
-        assert.equal(playerChoice, CHOICES["No_Choice"], `player choice ${ playerChoice } does not match no choice`);
-        assert.equal(playerScore, 0, `player score ${ playerScore } does not match a score of 0`);
+    it("Test players initial scores", async() => {
+      let score_player1 = player_1[2].toNumber();
+      let score_player2 = player_2[2].toNumber();
 
-        //Test winner is nobody
-        var contractWinner = await instance.winner();
-        assert.equal(contractWinner, EMPTY_ADDRESS, `initial contract winner should be empty`);
+      assert.equal(score_player1, 0, "player 1 score should be 0");
+      assert.equal(score_player2, 0, "player 2 score should be 0");
     });
 
-    it("Test invalid player not in contract", async() => {
-        //Get Invalid Player from mapping
-        var player = await instance.players(accounts[2]);
-        var playerAddr = player[0];
-        //Invalid Player's don't have an address saved for their address
-        assert.equal(playerAddr, EMPTY_ADDRESS, `player address ${ playerAddr } was valid and should not be`);
+    it("Test invalid player", async() => {
+      //Get Invalid Player from mapping
+      var player = await instance.players(accounts[2]);
+      var playerAddr = player[0];
+      //Invalid Player's don't have an address saved for their address
+      assert.equal(playerAddr, EMPTY_ADDRESS, `player address ${ playerAddr } was valid and should not be`);
     });
 
-    it("Test playerChoose()", async() => {
-        //Player chooses Share
-        await instance.playerChoose(CHOICES["Share"], { from: accounts[0] });
-
-        //Get Player from mapping
-        var player = await instance.players(accounts[0]);
-        var playerChoice = player[1].toNumber();
-        assert.equal(playerChoice, CHOICES["Share"], `player choice ${ CHOICES["SHARE"] } was not recorded`);
-
-        //Test invalid Player chooses action share
-        await expectThrow(instance.playerChoose(CHOICES["Share"], { from: accounts[2] }));
-
-        //Test player cannot pass an invalid choice
-        await expectThrow(instance.playerChoose(9, { from: accounts[0] }));
-
-        //Test player chooses NoChoice
-        await expectThrow(instance.playerChoose(CHOICES["NoChoice"], { from: accounts[0] }));
-
-        //Test player cannot update choice if choice is already made
-        await expectThrow(instance.playerChoose(CHOICES["Take"], { from: accounts[0] }));
+    it("Test initial winner", async() => {
+      //Test winner is nobody
+      var contractWinner = await instance.winner();
+      assert.equal(contractWinner, EMPTY_ADDRESS, `initial contract winner should be empty`);
     });
+  });
 
-    it("Test getPlayerScore()", async() => {
-        //Test if address passed is not in the contract
-        await expectThrow(instance.getPlayerScore(accounts[2])); 
+  describe("Test playerChoose()", async() => {
+    it("Test playerChoose succcess", async() => {
+      //Player chooses Share 
+      await truffleAssert.passes(instance.playerChoose(CHOICES["Share"], { from: accounts[0] }));
 
-        //Test that a player's score can be retrieved        
-        var playerScore = await instance.getPlayerScore(accounts[0]);
-        assert.equal(playerScore, 0, `player score ${ playerScore } does not match a score of 0`);
+      //Get Player from mapping
+      var player = await instance.players(accounts[0]);
+      var playerChoice = player[1].toNumber();
+
+      await assert.equal(playerChoice, CHOICES["Share"], `player choice ${ CHOICES["SHARE"] } was not recorded`);
     });
     
-    it("Test player choices reset", async() => {
-        instance = await PrisonersDilemma.new(
-            [accounts[0], CHOICES["Take"], 0], 
-            [accounts[1], CHOICES["Take"], 0],
-            [1, 1, 1, 0]);
-
-        var player1 = await instance.players(accounts[0]);
-        var player2 = await instance.players(accounts[1]);
-
-        //both player choices should be reset
-        assert.equal(player1[1].toNumber(), 0, "Player 1 choice was not reset");
-        assert.equal(player2[1].toNumber(), 0, "Player 2 choice was not reset");
+    it("Test invalid Player", async() => {
+      await truffleAssert.fails(instance.playerChoose(CHOICES["Share"], { from: accounts[2] }), "Player address is not in contract");
     });
 
+    it("Test invalid choice", async() => {
+      //fails on enum value being invalid, but has no error message
+      await truffleAssert.fails(instance.playerChoose(9, { from: accounts[0] }))
+    });
+
+    it("Test player chooses No Choice", async() => {
+      await truffleAssert.fails(instance.playerChoose(CHOICES["No_Choice"], { from: accounts[0] }), "No selection made, player chose No Choice");
+    })
+
+    it("Test player cannot update choice if choice is already made", async() => {
+      await instance.playerChoose(CHOICES["Share"], { from: accounts[0] });
+      await truffleAssert.fails(instance.playerChoose(CHOICES["Take"], { from: accounts[0] }), "Player already made a choice");
+    })
+
+    it("Test player choices reset", async() => {
+      //set up special instance
+      let instance = await PrisonersDilemma.new(
+          [accounts[0], CHOICES["Take"], 0], 
+          [accounts[1], CHOICES["Take"], 0],
+          [1, 1, 1, 0]);
+
+      let player1 = await instance.players(accounts[0]);
+      let choice_player1 = player1[1].toNumber();
+      let player2 = await instance.players(accounts[1]);
+      let choice_player2 = player2[1].toNumber();
+
+      //both player choices should be reset
+      assert.equal(choice_player1, 0, "Player 1 choice was not reset");
+      assert.equal(choice_player2, 0, "Player 2 choice was not reset");
+    });
+  });
+
+  describe("Test getPlayerScore()", async() => {
+    it("Test a valid player's score can be retrieved", async() => {
+      //Test that a player's score can be retrieved        
+      await truffleAssert.passes(instance.getPlayerScore.call(accounts[0]));
+      let playerScore = await instance.getPlayerScore.call(accounts[0]);
+      assert.equal(playerScore, 0, `player score ${ playerScore } does not match a score of 0`);
+    });
+
+    it("Test an invalid player's score cannot be retrieved", async() => {
+      //Test if address passed is not in the contract
+      await truffleAssert.fails(instance.getPlayerScore(accounts[2]), "Player address is not in contract");
+    });
+  });
+
+  describe("Test scoring", async() => {
     it("Test scoring with 1 winner", async() => {
-        instance = await PrisonersDilemma.new(
+        let instance = await PrisonersDilemma.new(
             [accounts[0], CHOICES["Share"], 0], 
             [accounts[1], CHOICES["Take"], 0],
             [1, 1, 1, 0]);
-
-        var player1 = await instance.players(accounts[0]);
-        var player2 = await instance.players(accounts[1]);
     
         //there should have been a winner
         var player1Score = await instance.getPlayerScore(accounts[0]);
@@ -110,18 +150,28 @@ contract('PrisonersDilemma', async (accounts) => {
         assert.equal(contractWinner, accounts[1], `contract winner ${ contractWinner }, does not match expected ${ accounts[1] }`);
 
         //Test if a player can continue to play after there is a winner
-        await expectThrow(instance.playerChoose(CHOICES["Take"], { from: accounts[0] }))
+        await truffleAssert.fails(instance.playerChoose(CHOICES["Take"], { from: accounts[0] }), "A winner or tie has been declared")
     });
-    
+
+    it("Test scoring with no progression", async() => {
+        let instance = await PrisonersDilemma.new(
+            [accounts[0], CHOICES["Take"], 0], 
+            [accounts[1], CHOICES["Take"], 0],
+            [1, 1, 1, 0]);
+            
+        //there should be no winner
+        var player1Score = await instance.getPlayerScore(accounts[0]);
+        var player2Score = await instance.getPlayerScore(accounts[1]);
+        assert.equal(player1Score, 0, `Player 1 points should be 0, not ${ player1Score }`);
+        assert.equal(player2Score, 0, `Player 2 points should be 0, not ${ player2Score }`);
+    });
+
     it("Test scoring with no winner", async() => {
-        instance = await PrisonersDilemma.new(
+        let instance = await PrisonersDilemma.new(
             [accounts[0], CHOICES["Share"], 0], 
             [accounts[1], CHOICES["Share"], 0],
             [1, 1, 1, 0]);
 
-        var player1 = await instance.players(accounts[0]);
-        var player2 = await instance.players(accounts[1]);
-    
         //there should be no winner
         var player1Score = await instance.getPlayerScore(accounts[0]);
         var player2Score = await instance.getPlayerScore(accounts[1]);
@@ -132,65 +182,56 @@ contract('PrisonersDilemma', async (accounts) => {
         assert.equal(contractWinner, instance.address, `contract winner ${ contractWinner }, does not match expected ${ instance.address }`);
 
         //Test if a player can continue to play after the game is over with no winner
-        await expectThrow(instance.playerChoose(CHOICES["Take"], { from: accounts[0] }))
+        await truffleAssert.fails(instance.playerChoose(CHOICES["Take"], { from: accounts[0] }), "A winner or tie has been declared")
     });
+  });
 
-    it("Test scoring with no progression", async() => {
-        instance = await PrisonersDilemma.new(
-            [accounts[0], CHOICES["Take"], 0], 
-            [accounts[1], CHOICES["Take"], 0],
-            [1, 1, 1, 0]);
-
-        var player1 = await instance.players(accounts[0]);
-        var player2 = await instance.players(accounts[1]);
-    
-        //there should be no winner
-        var player1Score = await instance.getPlayerScore(accounts[0]);
-        var player2Score = await instance.getPlayerScore(accounts[1]);
-        assert.equal(player1Score, 0, `Player 1 points should be 0, not ${ player1Score }`);
-        assert.equal(player2Score, 0, `Player 2 points should be 0, not ${ player2Score }`);
-    });
-
+  describe("Test full run through", async() => {
     it("Test an actual game", async() => {
-        await instance.playerChoose(CHOICES["Share"], { from: accounts[0] });
-        await instance.playerChoose(CHOICES["Share"], { from: accounts[1] });
+      await instance.playerChoose(CHOICES["Share"], { from: accounts[0] });
+      await instance.playerChoose(CHOICES["Share"], { from: accounts[1] });
 
-        for(i = 0; i < 4; i++) {
-            await instance.playerChoose(CHOICES["Share"], { from: accounts[0] });
-            await instance.playerChoose(CHOICES["Take"], { from: accounts[1] });
-        }
+      for(i = 0; i < 4; i++) {
+          await instance.playerChoose(CHOICES["Share"], { from: accounts[0] });
+          await instance.playerChoose(CHOICES["Take"], { from: accounts[1] });
+      }
 
-        var player1 = await instance.players(accounts[0]);
-        var player2 = await instance.players(accounts[1]);
-    
-        //both player choices should be reset
-        assert.equal(player1[1].toNumber(), 0, "Player 1 choice was not reset");
-        assert.equal(player2[1].toNumber(), 0, "Player 2 choice was not reset");
+      let player1 = await instance.players(accounts[0]);
+      let choice_player1 = player1[1].toNumber();
+      let player2 = await instance.players(accounts[1]);
+      let choice_player2 = player2[1].toNumber();
 
-        //there should have been a winner
-        var player1Score = await instance.getPlayerScore(accounts[0]);
-        var player2Score = await instance.getPlayerScore(accounts[1]);
-        assert.equal(player1Score, 1, `Player 1 points should be 1, not ${ player1Score }`);
-        assert.equal(player2Score, 21, `Player 2 points should be 21, not ${ player2Score }`);
+      //both player choices should be reset
+      assert.equal(choice_player1, 0, "Player 1 choice was not reset");
+      assert.equal(choice_player2, 0, "Player 2 choice was not reset");
 
-        var contractWinner = await instance.winner();
-        assert.equal(contractWinner, accounts[1], `contract winner ${ contractWinner }, does not match expected ${ accounts[1] }`);
+      //there should have been a winner
+      var player1Score = await instance.getPlayerScore(accounts[0]);
+      var player2Score = await instance.getPlayerScore(accounts[1]);
+      assert.equal(player1Score, 1, `Player 1 points should be 1, not ${ player1Score }`);
+      assert.equal(player2Score, 21, `Player 2 points should be 21, not ${ player2Score }`);
 
-        //Test if a player can continue to play after there is a winner
-        await expectThrow(instance.playerChoose(CHOICES["Take"], { from: accounts[0] }))
+      var contractWinner = await instance.winner();
+      assert.equal(contractWinner, accounts[1], `contract winner ${ contractWinner }, does not match expected ${ accounts[1] }`);
+
+      //Test if a player can continue to play after there is a winner
+      await truffleAssert.fails(instance.playerChoose(CHOICES["Take"], { from: accounts[0] }), "A winner or tie has been declared")
     });
+  });
 
+  describe("Gas Estimates", async() => {
     it("Gas Analysis", async() => {
-        var estimate = 0;
+      var estimate = 0;
 
-        // Create
-        var receipt = await web3.eth.getTransactionReceipt(instance.transactionHash);
-        console.log(`\tcontract creation gas estimate: ${ receipt.gasUsed }`);
-        // Choose
-        estimate  = await instance.playerChoose.estimateGas(CHOICES["Share"], { from: accounts[0] });
-        console.log(`\tplayerChoose() gas estimate: ${ estimate }`);
-        // Destroy 
-        estimate = await instance.endGame.estimateGas();
-        console.log(`\tendGame() gas estimate: ${ estimate }`);
+      // Create
+      var receipt = await web3.eth.getTransactionReceipt(instance.transactionHash);
+      console.log(`\tcontract creation gas estimate: ${ receipt.gasUsed }`);
+      // Choose
+      estimate  = await instance.playerChoose.estimateGas(CHOICES["Share"], { from: accounts[0] });
+      console.log(`\tplayerChoose() gas estimate: ${ estimate }`);
+      // Destroy 
+      estimate = await instance.endGame.estimateGas();
+      console.log(`\tendGame() gas estimate: ${ estimate }`);
     });
+  });
 });
